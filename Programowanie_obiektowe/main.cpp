@@ -38,7 +38,7 @@ comp_lex subtract_complex(comp_lex num1, comp_lex num2) {
 	result.i = num1.i - num2.i;
 	return result;
 }
-int main() {
+int nmain() {
 	comp_lex num1, num2;
 	num1.r = 2;
 	num1.i = 3;
