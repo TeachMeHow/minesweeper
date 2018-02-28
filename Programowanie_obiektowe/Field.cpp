@@ -28,7 +28,7 @@ bool Field::get_visible()
 {
 	return visible;
 }
-bool Field::set_visible()
+void Field::set_visible()
 {
 	visible = true;
 }
@@ -36,7 +36,22 @@ bool Field::get_flag()
 {
 	return flag;
 }
-bool Field::set_flag()
+
+void Field::set_flag(bool val)
 {
-	flag = !flag;
+	flag = val;
+}
+bool Field::toggle_flag()
+{
+	set_flag(!this->get_flag());
+	return this->get_flag();
+}
+
+std::string Field::info()
+{
+	std::string buffer;
+	buffer += (this->get_mine() ? "1" : "0");
+	buffer += (this->get_visible() ? "1" : "0");
+	buffer += (this->get_flag() ? "1" : "0");
+	return buffer;
 }

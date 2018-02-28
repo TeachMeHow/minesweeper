@@ -16,10 +16,12 @@ public:
 	//true if is uncovered
 	bool get_visible();
 	//true if has been flagged
-	bool set_visible();
+	void set_visible();
 
 	bool get_flag();
-	bool set_flag();
+	void set_flag(bool val);
+	bool toggle_flag();
+	
 	//returns [mine, visible, flag] in str form
 	std::string info();
 
