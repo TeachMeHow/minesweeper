@@ -115,6 +115,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="2018_02_28.cpp" />
     <ClCompile Include="cars.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>

@@ -1,7 +1,20 @@
+/*
+	Baza danych przechowuj¹ca dane samochodów w tablicy dynamicznej
+
+	Zgodnie z zaleceniami nie u¿ywam wejœcia od u¿ytkownika z wyj¹tkiem prostego menu
+	Reszta mo¿e zostaæ zaimplementowana jako np. interfejs graficzny
+
+	Nie ma odczytu i wczytywania do pliku, robienie tego w standardowej bibliotece
+	jest drog¹ przez mêkê i nigdy mi nie dzia³a
+
+	Szymon Cichy 235093
+	27/02/2018 Wroclaw
+*/
+
+
+
 #include <iostream>
 #include <string>
-#include <fstream>
-#include <ostream>
 #include <vector>
 
 const size_t MAX_SIZE = 20;
@@ -42,7 +55,7 @@ istream& operator>> (istream& is, car& per) {
 
 
 
-int main() {
+int nmain() {
 	vector <car> database;
 	fill_database(&database);
 
@@ -104,14 +117,7 @@ void menu(vector<car> * database) {
 	int index;
 
 	car carone = example_car();
-	std::filebuf fb;
-	fb.open("db.txt", std::ios::out);
-	ostream os(&fb);
-
-	std::filebuf ib;
-	ib.open("db.txt", std::ios::in);
-	istream is(&ib);
-	//TODO what is new car?
+	//TODO what is new car? User input, GUI, whatever
 	car newcar;
 	vector<car>::const_iterator c_it;
 
@@ -134,12 +140,11 @@ void menu(vector<car> * database) {
 		case 3: print_table(database); 
 			break;
 		case 4: 
-			os << carone;
-			is >> newcar;
-			std::cout << newcar.color;
-
+			//TODO make me
 			break;
-		case 5: break;
+		case 5: 
+			//TODO make me
+			break;
 		default:
 			break;
 		}
