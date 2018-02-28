@@ -1,4 +1,6 @@
 #pragma once
+
+#include <string>
 class Field
 {
 	bool mine;
@@ -18,6 +20,8 @@ public:
 
 	bool get_flag();
 	bool set_flag();
+	//returns [mine, visible, flag] in str form
+	std::string info();
 
 };
 
