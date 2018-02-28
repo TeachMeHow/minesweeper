@@ -6,6 +6,7 @@ class Board
 	static const size_t DEFAULT_SIZE;
 	size_t row_count;
 	size_t col_count;
+	bool in_bounds(int x, int y);
 public:
 	Board() : Board(DEFAULT_SIZE, DEFAULT_SIZE) { };
 	//Square board MxM
@@ -17,5 +18,6 @@ public:
 	void deploy_mines(int n, bool random);
 	void debug_display();
 	bool has_mine(int x, int y);
+
 };
 

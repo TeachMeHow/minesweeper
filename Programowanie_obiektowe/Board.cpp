@@ -12,6 +12,12 @@ using std::for_each;
 const size_t Board::DEFAULT_SIZE = 10;
 
 
+bool Board::in_bounds(int x, int y)
+{
+	return (0 <= x <= col_count - 1) &&
+		(0 <= y <= row_count);
+}
+
 Board::Board(size_t M, size_t N)
 {
 	row_count = M;
