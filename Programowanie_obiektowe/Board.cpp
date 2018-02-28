@@ -94,3 +94,8 @@ void Board::debug_display()
 		std::cout << std::endl;
 	}
 }
+
+bool Board::has_mine(int x, int y)
+{
+	return grid[y][x].get_mine();
+}

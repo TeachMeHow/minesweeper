@@ -6,7 +6,7 @@ class Field
 	bool visible;
 	bool flag;
 	//true if contains mine
-	bool get_mine() const;
+	
 	
 
 public:
@@ -16,6 +16,7 @@ public:
 	bool get_visible() const;
 	//true if has been flagged
 	void set_visible();
+	bool get_mine() const;
 	void set_mine();
 	bool get_flag() const;
 	void set_flag(bool val);

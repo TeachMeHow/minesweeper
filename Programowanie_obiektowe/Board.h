@@ -16,5 +16,6 @@ public:
 	std::string show_info_about_element(size_t row, size_t col);
 	void deploy_mines(int n, bool random);
 	void debug_display();
+	bool has_mine(int x, int y);
 };
 
