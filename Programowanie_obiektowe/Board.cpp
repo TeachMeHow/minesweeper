@@ -105,3 +105,27 @@ bool Board::has_mine(int x, int y)
 {
 	return in_bounds(x, y) ? grid[y][x].get_mine() : false;
 }
+
+int Board::count_mines(int x, int y)
+{
+	int count = 0;
+	/*Somebody Toucha My 
+							   _          _   _   _ 
+							  | |        | | | | (_)
+		 ___ _ __   __ _  __ _| |__   ___| |_| |_ _ 
+		/ __| '_ \ / _` |/ _` | '_ \ / _ \ __| __| |
+		\__ \ |_) | (_| | (_| | | | |  __/ |_| |_| |
+		|___/ .__/ \__,_|\__, |_| |_|\___|\__|\__|_|
+			| |           __/ |                     
+			|_|          |___/       
+	*/
+	if (has_mine(++x, ++y) && in_bounds(x, y)) count++;
+	if (has_mine(x, --y) && in_bounds(x, y)) count++;
+	if (has_mine(x, --y) && in_bounds(x, y)) count++;
+	if (has_mine(--x, y) && in_bounds(x, y)) count++;
+	if (has_mine(--x, y) && in_bounds(x, y)) count++;
+	if (has_mine(x, ++y) && in_bounds(x, y)) count++;
+	if (has_mine(x, ++y) && in_bounds(x, y)) count++;
+	if (has_mine(++x, y) && in_bounds(x, y)) count++;
+	return count;
+}
