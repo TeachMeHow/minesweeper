@@ -4,6 +4,7 @@
 #include <vector>
 #include <random>
 #include <algorithm>
+#include <time.h>
 using std::unordered_set;
 using std::vector;
 using std::for_each;
@@ -49,7 +50,7 @@ void Board::deploy_mines(int n, bool random)
 		unordered_set<int> generated_numbers;
 		vector<int> row_indexes;
 		vector<int> col_indexes;
-		srand(0);
+		srand(time(NULL));
 		while (generated_numbers.size() < n)
 		{
 			generated_numbers.insert(rand() % range);
@@ -57,21 +58,12 @@ void Board::deploy_mines(int n, bool random)
 		for_each(generated_numbers.begin(), generated_numbers.end(), [&](int i)
 		{
 			row_indexes.push_back(i / col_count);
-			col_indexes.push_back(i & col_count);
+			col_indexes.push_back(i % col_count);
 		}
 		);
-		/*
-		while (it != generated_numbers.cend()) 
-		{
-			col_indexes.push_back(*it % col_count);
-			row_indexes.push_back(*it / col_count);
-			++it;
-		}
-
-		*/
+		auto it = col_indexes.begin();
 		for_each(row_indexes.begin(), row_indexes.end(), [&](int i)
 		{
-			auto it = col_indexes.begin();
 			grid[i][*it].set_mine();
 			it++;
 		}
@@ -88,5 +80,17 @@ void Board::deploy_mines(int n, bool random)
 		{
 			grid[i][j].set_mine();
 		}
+	}
+}
+
+void Board::debug_display()
+{
+	for (size_t e = 0; e < row_count; e++)
+	{
+		for (size_t i = 0; i < col_count; i++)
+		{
+			std::cout << show_info_about_element(e, i) << " ";
+		}
+		std::cout << std::endl;
 	}
 }
