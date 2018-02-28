@@ -1,5 +1,5 @@
 #include "Field.h"
-
+#include <iostream>
 
 
 Field::Field()
@@ -14,9 +14,9 @@ Field::~Field()
 {
 }
 
-bool Field::get_mine()
+bool Field::get_mine() const
 {
-	return mine;
+	return this->mine;
 }
 void Field::set_mine()
 {
@@ -24,7 +24,7 @@ void Field::set_mine()
 }
 
 
-bool Field::get_visible()
+bool Field::get_visible() const
 {
 	return visible;
 }
@@ -32,10 +32,11 @@ void Field::set_visible()
 {
 	visible = true;
 }
-bool Field::get_flag()
+bool Field::get_flag() const
 {
 	return flag;
 }
+
 
 void Field::set_flag(bool val)
 {
