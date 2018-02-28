@@ -2,9 +2,10 @@
 #include "Field.h"
 class Board
 {
-	Field* grid;
+	Field*** grid;
 	static const size_t DEFAULT_VALUE;
-
+	size_t row_count;
+	size_t col_count;
 public:
 	Board() : Board(DEFAULT_VALUE, DEFAULT_VALUE) { };
 	//Square board MxM
