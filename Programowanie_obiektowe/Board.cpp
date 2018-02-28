@@ -103,5 +103,5 @@ void Board::debug_display()
 
 bool Board::has_mine(int x, int y)
 {
-	return grid[y][x].get_mine();
+	return in_bounds(x, y) ? grid[y][x].get_mine() : false;
 }
