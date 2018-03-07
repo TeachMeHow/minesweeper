@@ -1,18 +1,14 @@
 
 #include <SFML/Graphics.hpp>
 
+#include "Board.h"
+#include "Field.h"
+
+
 int main()
 {
-	sf::RenderWindow window(sf::VideoMode(800, 600),
-		"Hello SFML", sf::Style::Default);
-
-	sf::Font font;
-	font.loadFromFile("C:/Windows/Fonts/Arial.ttf");
-
-	sf::Text text;
-	text.setFont(font);
-	text.setPosition(200, 200);
-	text.setString("Hello SFML");
+	sf::RenderWindow window(sf::VideoMode(800, 600), "SFML window");
+	Board game = Board(10);
 
 	while (window.isOpen())
 	{
@@ -22,10 +18,11 @@ int main()
 			if (event.type == sf::Event::Closed)
 				window.close();
 		}
+
 		window.clear();
-		window.draw(text);
+		game.display(window);
 		window.display();
 	}
 
-	return 0;
+	return EXIT_SUCCESS;
 }

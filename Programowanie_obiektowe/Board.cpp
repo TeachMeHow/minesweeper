@@ -162,6 +162,11 @@ void Board::display() const
 
 }
 
+void Board::display(sf::RenderWindow & win)
+{
+	
+}
+
 void Board::reveal(int x, int y)
 {
 	grid[y][x].set_visible();

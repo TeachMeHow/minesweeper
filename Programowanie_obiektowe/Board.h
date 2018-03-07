@@ -1,5 +1,6 @@
 #pragma once
 #include "Field.h"
+#include <SFML/Graphics.hpp>
 class Board
 {
 	Field** grid;
@@ -20,9 +21,10 @@ public:
 	void debug_display() const;
 	bool has_mine(int x, int y) const;
 	int count_mines(int x, int y) const;
-	void display() const;
 	void reveal(int x, int y);
 	void uncover_mines();
+	void display() const;
+	void display(sf::RenderWindow & win);
 
 
 };
