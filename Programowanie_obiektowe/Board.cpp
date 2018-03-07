@@ -11,17 +11,18 @@ using std::for_each;
 
 const size_t Board::DEFAULT_SIZE = 10;
 
-
-bool Board::in_bounds(int x, int y)
+//TODO Wrong number of has_mines - bounds?
+bool Board::in_bounds(int x, int y) const
 {
-	return (0 <= x <= col_count - 1) &&
-		(0 <= y <= row_count);
+	return (0 <= x < col_count) &&
+		(0 <= y < row_count);
 }
 
 Board::Board(size_t M, size_t N)
 {
 	row_count = M;
 	col_count = N;
+	end_game = false;
 	
 	grid = new Field*[M];
 	for (size_t i = 0; i < M; i++)
@@ -42,7 +43,7 @@ Board::~Board()
 	
 }
 
-std::string Board::show_info_about_element(size_t row, size_t col)
+std::string Board::show_info_about_element(size_t row, size_t col) const
 	{
 		return grid[row][col].info();
 	}
@@ -89,7 +90,7 @@ void Board::deploy_mines(int n, bool random)
 	}
 }
 
-void Board::debug_display()
+void Board::debug_display() const
 {
 	for (size_t e = 0; e < row_count; e++)
 	{
@@ -101,12 +102,12 @@ void Board::debug_display()
 	}
 }
 
-bool Board::has_mine(int x, int y)
+bool Board::has_mine(int x, int y) const
 {
 	return in_bounds(x, y) ? grid[y][x].get_mine() : false;
 }
 
-int Board::count_mines(int x, int y)
+int Board::count_mines(int x, int y) const
 {
 	int count = 0;
 	/*Somebody Toucha My 
@@ -128,4 +129,59 @@ int Board::count_mines(int x, int y)
 	if (has_mine(x, ++y) && in_bounds(x, y)) count++;
 	if (has_mine(++x, y) && in_bounds(x, y)) count++;
 	return count;
+}
+
+void Board::display() const
+{
+	for (size_t i = 0; i < row_count; i++)
+	{
+		grid[5][i].set_visible();
+	}
+	for (size_t i = 0; i < col_count; i++)
+	{
+		grid[i][4].set_flag(true);
+	}
+	for (size_t e = 0; e < row_count; e++)
+	{
+		for (size_t i = 0; i < col_count; i++)
+		{
+			Field element = grid[e][i];
+			std::string symbol;
+			if (!element.get_visible() && !element.get_flag()) symbol = "[.]";
+			else if (!element.get_visible() && element.get_flag()) symbol = "[?]";
+			else if (element.get_visible() && count_mines(i,e) == 0
+				&& !has_mine(i,e)) symbol = "[ ]";
+			else if (element.get_visible() && !has_mine(i, e)) 
+				symbol = '[' + std::to_string(count_mines(i, e)) + ']';
+			else if (element.get_visible() && has_mine(i, e)) symbol = "[x]";
+
+			std::cout << symbol;
+		}
+		std::cout << std::endl;
+	}
+
+}
+
+void Board::reveal(int x, int y)
+{
+	grid[y][x].set_visible();
+	if (has_mine(x, y)) {
+		end_game = true;
+		uncover_mines();
+	}
+}
+
+void Board::uncover_mines()
+{
+	for (size_t e = 0; e < row_count; e++)
+	{
+		for (size_t i = 0; i < col_count; i++)
+		{
+			if (has_mine(i, e))
+			{
+				reveal(i, e);
+			}
+		}
+
+	}
 }

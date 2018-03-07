@@ -9,7 +9,9 @@ int main()
 	Board();
 
 
-	brd.deploy_mines(12, true);
+	brd.deploy_mines(12, false);
 	brd.debug_display();
+	brd.display();
+	std::cout << brd.count_mines(2,1);
 	return 0;
 }
