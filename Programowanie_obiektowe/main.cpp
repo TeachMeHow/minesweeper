@@ -8,7 +8,7 @@
 int main()
 {
 	sf::RenderWindow window(sf::VideoMode(800, 600), "SFML window");
-	Board game = Board(10);
+	Board game = Board(13, 5);
 
 	while (window.isOpen())
 	{
@@ -18,10 +18,7 @@ int main()
 			if (event.type == sf::Event::Closed)
 				window.close();
 		}
-
-		window.clear();
 		game.display(window);
-		window.display();
 	}
 
 	return EXIT_SUCCESS;

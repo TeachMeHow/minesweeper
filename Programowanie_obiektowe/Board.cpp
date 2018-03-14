@@ -164,7 +164,30 @@ void Board::display() const
 
 void Board::display(sf::RenderWindow & win)
 {
-	
+	sf::Color field_color;
+	sf::Color bg_color;
+	field_color = sf::Color(0xFFFFFF);
+	bg_color = sf::Color(0x696969);
+	win.clear(bg_color);
+	//shapes
+	//for each field draw rectangle
+	int padding = 10;
+	int width = 25, height = 25;
+	for (size_t e = 0; e < row_count; e++)
+	{
+		
+		for (size_t i = 0; i < col_count; i++)
+		{
+			sf::RectangleShape rectangle(sf::Vector2f(width, height));
+			int x, y;
+			x = i * padding + padding + i * width;
+			y = e * padding + padding + e * height;
+			rectangle.setPosition(x, y);
+			win.draw(rectangle);
+		}
+	}
+	win.display();
+
 }
 
 void Board::reveal(int x, int y)
