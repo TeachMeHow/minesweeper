@@ -8,6 +8,7 @@
 int main()
 {
 	sf::RenderWindow window(sf::VideoMode(800, 600), "SFML window");
+	window.setFramerateLimit(60);
 	Board game = Board(13, 5);
 
 	while (window.isOpen())

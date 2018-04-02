@@ -14,8 +14,8 @@ const size_t Board::DEFAULT_SIZE = 10;
 //TODO Wrong number of has_mines - bounds?
 bool Board::in_bounds(int x, int y) const
 {
-	return (0 <= x < col_count) &&
-		(0 <= y < row_count);
+	return 0 <= x && x < col_count &&
+		0 <= y && y < row_count;
 }
 
 Board::Board(size_t M, size_t N)
@@ -164,26 +164,43 @@ void Board::display() const
 
 void Board::display(sf::RenderWindow & win)
 {
-	sf::Color field_color;
 	sf::Color bg_color;
-	field_color = sf::Color(0xFFFFFF);
 	bg_color = sf::Color(0x696969);
 	win.clear(bg_color);
 	//shapes
 	//for each field draw rectangle
-	int padding = 10;
-	int width = 25, height = 25;
+	int width = 40, height = 40;
+	int padding = 20;
+	sf::Vector2f dimensions = sf::Vector2f(width, height);
 	for (size_t e = 0; e < row_count; e++)
 	{
-		
 		for (size_t i = 0; i < col_count; i++)
 		{
-			sf::RectangleShape rectangle(sf::Vector2f(width, height));
-			int x, y;
-			x = i * padding + padding + i * width;
-			y = e * padding + padding + e * height;
-			rectangle.setPosition(x, y);
+			float x, y;
+			x = i * padding + padding + i * dimensions.x;
+			y = e * padding + padding + e * dimensions.y;
+			sf::Vector2f pos(x, y);
+			sf::RectangleShape rectangle = sf::RectangleShape(dimensions);
+			rectangle.setPosition(pos);
+			sf::Color field_color = sf::Color(0xFFFFFF);
+			rectangle.setFillColor(field_color);
 			win.draw(rectangle);
+		}
+	}
+	// get position of mouse
+	if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) 
+	{
+		sf::Vector2i m_pos = sf::Mouse::getPosition(win);
+		int i_x = m_pos.x / (width + padding);
+		int i_y = m_pos.y / (height + padding);
+		if (in_bounds(i_x, i_y))
+		{
+			float x_rel = m_pos.x - i_x * (width + padding);
+			float y_rel = m_pos.y - i_y * (height + padding);
+			if (0 <= (x_rel - padding) && (x_rel - padding) <= width && 0 <= (y_rel - padding) && (y_rel - padding) <= height)
+			{
+				grid[i_y][i_x].set_visible();
+			}
 		}
 	}
 	win.display();
