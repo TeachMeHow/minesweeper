@@ -9,6 +9,7 @@ class Board
 	size_t col_count;
 	bool end_game;
 	bool in_bounds(int x, int y) const;
+	
 public:
 	Board() : Board(DEFAULT_SIZE, DEFAULT_SIZE) { };
 	//Square board MxM
@@ -24,9 +25,7 @@ public:
 	void reveal(int x, int y);
 	void uncover_mines();
 	void display() const;
-	void display(sf::RenderWindow & win);
-
-
+	void display(sf::RenderWindow & win, sf::Font font, sf::Image *icons);
 
 
 };

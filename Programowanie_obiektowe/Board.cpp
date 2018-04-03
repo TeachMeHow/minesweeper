@@ -5,9 +5,11 @@
 #include <random>
 #include <algorithm>
 #include <time.h>
+#include <string>
 using std::unordered_set;
 using std::vector;
 using std::for_each;
+using std::string;
 
 const size_t Board::DEFAULT_SIZE = 10;
 
@@ -162,7 +164,7 @@ void Board::display() const
 
 }
 
-void Board::display(sf::RenderWindow & win)
+void Board::display(sf::RenderWindow & win, sf::Font font, sf::Image* icons)
 {
 	sf::Color bg_color;
 	bg_color = sf::Color(0x696969);
@@ -181,10 +183,58 @@ void Board::display(sf::RenderWindow & win)
 			y = e * padding + padding + e * dimensions.y;
 			sf::Vector2f pos(x, y);
 			sf::RectangleShape rectangle = sf::RectangleShape(dimensions);
+			sf::Text text;
+			sf::Sprite sprite;
+			sf::Texture texture;
+
+			texture.create(100, 100);
+			
+			text.setFont(font);
+			text.setCharacterSize(height);
+			text.setString("");
 			rectangle.setPosition(pos);
-			sf::Color field_color = sf::Color(0xFFFFFF);
-			rectangle.setFillColor(field_color);
+			text.setFillColor(sf::Color::Black);
+
+			// styling the field
+			// get field corresponding to the rectangle being drawn, get properties and assign according colors
+			Field element = grid[e][i];
+			// field not visible  and doesn't have a flag - base color
+			if (!element.get_visible() && !element.get_flag()) rectangle.setFillColor(sf::Color::Blue);
+			// field visible and has a flag - base color && flag symbol
+			else if (!element.get_visible() && element.get_flag())
+			{
+				rectangle.setFillColor(sf::Color::Blue);
+				texture.update(icons[2]);
+
+				sprite.setTexture(texture);
+				sprite.setPosition(pos);
+				sprite.setScale(width / 100.0, height / 100.0);
+			}
+			// field is visible and no mines around - empty color
+			else if (element.get_visible() && !has_mine(i, e))
+			{
+				rectangle.setFillColor(sf::Color::Magenta);
+				text.setString(std::to_string(count_mines(i,e)));
+				text.setPosition(pos);
+				if (count_mines(i, e) == 0)
+				{
+					text.setString("");
+				}
+			}
+			// mine - empty/boom color?? and bomb symbol
+			else if (element.get_visible() && has_mine(i, e)) 
+			{
+				rectangle.setFillColor(sf::Color::White);
+
+				texture.update(icons[1]);
+
+				sprite.setTexture(texture);
+				sprite.setPosition(pos);
+				sprite.setScale(width / 100.0, height / 100.0);		
+			}
 			win.draw(rectangle);
+			win.draw(text);
+			win.draw(sprite);
 		}
 	}
 	// get position of mouse
@@ -199,7 +249,22 @@ void Board::display(sf::RenderWindow & win)
 			float y_rel = m_pos.y - i_y * (height + padding);
 			if (0 <= (x_rel - padding) && (x_rel - padding) <= width && 0 <= (y_rel - padding) && (y_rel - padding) <= height)
 			{
-				grid[i_y][i_x].set_visible();
+				reveal(i_x, i_y);
+			}
+		}
+	}
+	if (sf::Mouse::isButtonPressed(sf::Mouse::Right))
+	{
+		sf::Vector2i m_pos = sf::Mouse::getPosition(win);
+		int i_x = m_pos.x / (width + padding);
+		int i_y = m_pos.y / (height + padding);
+		if (in_bounds(i_x, i_y))
+		{
+			float x_rel = m_pos.x - i_x * (width + padding);
+			float y_rel = m_pos.y - i_y * (height + padding);
+			if (0 <= (x_rel - padding) && (x_rel - padding) <= width && 0 <= (y_rel - padding) && (y_rel - padding) <= height)
+			{
+				grid[i_y][i_x].toggle_flag();
 			}
 		}
 	}
@@ -224,7 +289,7 @@ void Board::uncover_mines()
 		{
 			if (has_mine(i, e))
 			{
-				reveal(i, e);
+				grid[e][i].set_visible();
 			}
 		}
 
