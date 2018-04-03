@@ -45,7 +45,6 @@ Board::~Board()
 	
 }
 
-
 void Board::deploy_mines(int n, bool random)
 {
 	if (random)
@@ -87,7 +86,6 @@ void Board::deploy_mines(int n, bool random)
 		}
 	}
 }
-
 
 bool Board::has_mine(int x, int y) const
 {
@@ -151,34 +149,46 @@ void Board::display() const
 
 void Board::display(sf::RenderWindow & win, sf::Font font, sf::Image* icons)
 {
+	// set background color and clear the window with that color
 	sf::Color bg_color;
 	bg_color = sf::Color(0x696969);
 	win.clear(bg_color);
-	//shapes
-	//for each field draw rectangle
-	int width = 40, height = 40;
-	int padding = 20;
+	// set width and height of the field as well as spacing between fields
+	unsigned int width = 40, height = 40;
+	unsigned int padding = 20;
 	sf::Vector2f dimensions = sf::Vector2f(width, height);
+	// draw each field
+	// TODO to avoid creating fields and textures each time, maybe just
+	// create them once and draw?
 	for (size_t e = 0; e < row_count; e++)
 	{
 		for (size_t i = 0; i < col_count; i++)
 		{
+			// calculate the position of the field
 			float x, y;
 			x = i * padding + padding + i * dimensions.x;
 			y = e * padding + padding + e * dimensions.y;
 			sf::Vector2f pos(x, y);
+			// create a rectangle representing a field
 			sf::RectangleShape rectangle = sf::RectangleShape(dimensions);
+			rectangle.setPosition(pos);
+
 			sf::Text text;
 			sf::Sprite sprite;
+			// WARNING texture MUST be the same size as icons used - in my case it's 100x100 png files
 			sf::Texture texture;
-
 			texture.create(100, 100);
-			
-			text.setFont(font);
-			text.setCharacterSize(height);
+
+			// set character size to be the same as either width or height, whichever is smaller
+			// style the 
+			text.setCharacterSize(width < height ? width : height);
+			//set text to empty and style it
 			text.setString("");
-			rectangle.setPosition(pos);
+			text.setFont(font);
 			text.setFillColor(sf::Color::Black);
+			text.setPosition(pos);
+
+			
 
 			// styling the field
 			// get field corresponding to the rectangle being drawn, get properties and assign according colors
@@ -200,7 +210,7 @@ void Board::display(sf::RenderWindow & win, sf::Font font, sf::Image* icons)
 			{
 				rectangle.setFillColor(sf::Color::Magenta);
 				text.setString(std::to_string(count_mines(i,e)));
-				text.setPosition(pos);
+				
 				if (count_mines(i, e) == 0)
 				{
 					text.setString("");
