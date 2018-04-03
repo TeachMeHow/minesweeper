@@ -42,9 +42,10 @@ public:
 	// Board display linked to a SFML  window
 	void display(sf::RenderWindow & win, sf::Font font, sf::Image *icons);
 	// Method to handle mouse clicks
-	void handle_mouse(sf::RenderWindow & win, sf::Event & event);
 	void style_game(unsigned int width, unsigned int height, unsigned int padding, sf::Color bg_color);
-
+	bool end() { return end_game; };
+	// returns score in seconds or fail (-1)
+	int score();
 
 };
 

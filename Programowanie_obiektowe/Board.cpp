@@ -229,14 +229,6 @@ void Board::display(sf::RenderWindow & win, sf::Font font, sf::Image* icons)
 	}
 	sf::Event event;
 	win.pollEvent(event);
-	
-
-	win.display();
-
-}
-
-void Board::handle_mouse(sf::RenderWindow & win, sf::Event & event)
-{
 	if (event.type == sf::Event::MouseButtonPressed)
 	{
 		sf::Vector2i m_pos = sf::Mouse::getPosition(win);
@@ -256,13 +248,17 @@ void Board::handle_mouse(sf::RenderWindow & win, sf::Event & event)
 				{
 					grid[i_y][i_x].toggle_flag();
 				}
-				
+
 			}
 		}
-		
-		
+
+
 	}
+
+	win.display();
+
 }
+
 
 void Board::style_game(unsigned int width, unsigned int height, unsigned int padding, sf::Color bg_color)
 {
@@ -270,6 +266,11 @@ void Board::style_game(unsigned int width, unsigned int height, unsigned int pad
 	this->height = height;
 	this->padding = padding;
 	this->bg_color = bg_color;
+}
+
+int Board::score()
+{
+	return -1;
 }
 
 void Board::reveal(int x, int y)
