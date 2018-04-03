@@ -45,10 +45,6 @@ Board::~Board()
 	
 }
 
-std::string Board::show_info_about_element(size_t row, size_t col) const
-	{
-		return grid[row][col].info();
-	}
 
 void Board::deploy_mines(int n, bool random)
 {
@@ -92,17 +88,6 @@ void Board::deploy_mines(int n, bool random)
 	}
 }
 
-void Board::debug_display() const
-{
-	for (size_t e = 0; e < row_count; e++)
-	{
-		for (size_t i = 0; i < col_count; i++)
-		{
-			std::cout << show_info_about_element(e, i) << " ";
-		}
-		std::cout << std::endl;
-	}
-}
 
 bool Board::has_mine(int x, int y) const
 {
