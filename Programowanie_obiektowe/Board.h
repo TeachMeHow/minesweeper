@@ -13,7 +13,11 @@ class Board
 	bool end_game;
 	// false if there is no field with x,y index on the grid
 	bool in_bounds(int x, int y) const;
-	
+	// styling with default values
+	unsigned int width = 40;
+	unsigned int height = 40;
+	unsigned int padding = 10;
+	sf::Color bg_color = sf::Color(0x696969);
 public:
 	Board() : Board(DEFAULT_SIZE, DEFAULT_SIZE) { };
 	//Square board MxM
@@ -37,6 +41,9 @@ public:
 	void display() const;
 	// Board display linked to a SFML  window
 	void display(sf::RenderWindow & win, sf::Font font, sf::Image *icons);
+	// Method to handle mouse clicks
+	void handle_mouse(sf::RenderWindow & win, sf::Event & event);
+	void style_game(unsigned int width, unsigned int height, unsigned int padding, sf::Color bg_color);
 
 
 };

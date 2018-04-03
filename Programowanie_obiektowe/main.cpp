@@ -45,6 +45,7 @@ int main()
 		sf::Event event;
 		while (window.pollEvent(event))
 		{
+			//game.handle_mouse(window, event);
 			if (event.type == sf::Event::Closed)
 				window.close();
 		}

@@ -149,13 +149,8 @@ void Board::display() const
 
 void Board::display(sf::RenderWindow & win, sf::Font font, sf::Image* icons)
 {
-	// set background color and clear the window with that color
-	sf::Color bg_color;
-	bg_color = sf::Color(0x696969);
 	win.clear(bg_color);
-	// set width and height of the field as well as spacing between fields
-	unsigned int width = 40, height = 40;
-	unsigned int padding = 20;
+	// create vector from internal styling
 	sf::Vector2f dimensions = sf::Vector2f(width, height);
 	// draw each field
 	// TODO to avoid creating fields and textures each time, maybe just
@@ -232,39 +227,49 @@ void Board::display(sf::RenderWindow & win, sf::Font font, sf::Image* icons)
 			win.draw(sprite);
 		}
 	}
-	// get position of mouse
-	if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) 
-	{
-		sf::Vector2i m_pos = sf::Mouse::getPosition(win);
-		int i_x = m_pos.x / (width + padding);
-		int i_y = m_pos.y / (height + padding);
-		if (in_bounds(i_x, i_y))
-		{
-			float x_rel = m_pos.x - i_x * (width + padding);
-			float y_rel = m_pos.y - i_y * (height + padding);
-			if (0 <= (x_rel - padding) && (x_rel - padding) <= width && 0 <= (y_rel - padding) && (y_rel - padding) <= height)
-			{
-				reveal(i_x, i_y);
-			}
-		}
-	}
-	if (sf::Mouse::isButtonPressed(sf::Mouse::Right))
-	{
-		sf::Vector2i m_pos = sf::Mouse::getPosition(win);
-		int i_x = m_pos.x / (width + padding);
-		int i_y = m_pos.y / (height + padding);
-		if (in_bounds(i_x, i_y))
-		{
-			float x_rel = m_pos.x - i_x * (width + padding);
-			float y_rel = m_pos.y - i_y * (height + padding);
-			if (0 <= (x_rel - padding) && (x_rel - padding) <= width && 0 <= (y_rel - padding) && (y_rel - padding) <= height)
-			{
-				grid[i_y][i_x].toggle_flag();
-			}
-		}
-	}
+	sf::Event event;
+	win.pollEvent(event);
+	
+
 	win.display();
 
+}
+
+void Board::handle_mouse(sf::RenderWindow & win, sf::Event & event)
+{
+	if (event.type == sf::Event::MouseButtonPressed)
+	{
+		sf::Vector2i m_pos = sf::Mouse::getPosition(win);
+		int i_x = m_pos.x / (width + padding);
+		int i_y = m_pos.y / (height + padding);
+		if (in_bounds(i_x, i_y))
+		{
+			float x_rel = m_pos.x - i_x * (width + padding);
+			float y_rel = m_pos.y - i_y * (height + padding);
+			if (0 <= (x_rel - padding) && (x_rel - padding) <= width && 0 <= (y_rel - padding) && (y_rel - padding) <= height)
+			{
+				if (event.mouseButton.button == sf::Mouse::Left)
+				{
+					reveal(i_x, i_y);
+				}
+				if (event.mouseButton.button == sf::Mouse::Right)
+				{
+					grid[i_y][i_x].toggle_flag();
+				}
+				
+			}
+		}
+		
+		
+	}
+}
+
+void Board::style_game(unsigned int width, unsigned int height, unsigned int padding, sf::Color bg_color)
+{
+	this->width = width;
+	this->height = height;
+	this->padding = padding;
+	this->bg_color = bg_color;
 }
 
 void Board::reveal(int x, int y)
