@@ -10,20 +10,22 @@ using std::unordered_set;
 using std::vector;
 using std::for_each;
 using std::string;
+using namespace std::chrono;
+typedef high_resolution_clock Time;
 
 const size_t Board::DEFAULT_SIZE = 10;
 
 //TODO Wrong number of has_mines - bounds?
 bool Board::in_bounds(int x, int y) const
 {
-	return 0 <= x && x < col_count &&
-		0 <= y && y < row_count;
+	return 0 <= x && x < col_num &&
+		0 <= y && y < row_num;
 }
 
 Board::Board(size_t M, size_t N)
 {
-	row_count = M;
-	col_count = N;
+	row_num = M;
+	col_num = N;
 	end_game = false;
 	
 	grid = new Field*[M];
@@ -37,7 +39,7 @@ Board::Board(size_t M, size_t N)
 Board::~Board()
 {
 
-	for (size_t i = 0; i < row_count; i++)
+	for (size_t i = 0; i < row_num; i++)
 	{
 		delete[] grid[i];
 	}
@@ -50,7 +52,7 @@ void Board::deploy_mines(int n, bool random)
 	if (random)
 	{
 		//generate MxN numbers, verify uniqueness, then col = num % col_count and row = num / col_count
-		size_t range = row_count * col_count;
+		size_t range = row_num * col_num;
 		unordered_set<int> generated_numbers;
 		vector<int> row_indexes;
 		vector<int> col_indexes;
@@ -61,8 +63,8 @@ void Board::deploy_mines(int n, bool random)
 		}
 		for_each(generated_numbers.begin(), generated_numbers.end(), [&](int i)
 		{
-			row_indexes.push_back(i / col_count);
-			col_indexes.push_back(i % col_count);
+			row_indexes.push_back(i / col_num);
+			col_indexes.push_back(i % col_num);
 		}
 		);
 		auto it = col_indexes.begin();
@@ -76,11 +78,11 @@ void Board::deploy_mines(int n, bool random)
 	}
 	else
 	{
-		for (size_t i = 0; i < col_count; i++)
+		for (size_t i = 0; i < col_num; i++)
 		{
 			grid[0][i].set_mine();
 		}
-		for (size_t i(1), j(1); row_count < col_count ? (i < row_count) : (j < col_count); i++, j++)
+		for (size_t i(1), j(1); row_num < col_num ? (i < row_num) : (j < col_num); i++, j++)
 		{
 			grid[i][j].set_mine();
 		}
@@ -118,17 +120,17 @@ int Board::count_mines(int x, int y) const
 
 void Board::display() const
 {
-	for (size_t i = 0; i < row_count; i++)
+	for (size_t i = 0; i < row_num; i++)
 	{
 		grid[5][i].set_visible();
 	}
-	for (size_t i = 0; i < col_count; i++)
+	for (size_t i = 0; i < col_num; i++)
 	{
 		grid[i][4].set_flag(true);
 	}
-	for (size_t e = 0; e < row_count; e++)
+	for (size_t e = 0; e < row_num; e++)
 	{
-		for (size_t i = 0; i < col_count; i++)
+		for (size_t i = 0; i < col_num; i++)
 		{
 			Field element = grid[e][i];
 			std::string symbol;
@@ -147,7 +149,7 @@ void Board::display() const
 
 }
 
-void Board::display(sf::RenderWindow & win, sf::Font font, sf::Image* icons)
+void Board::draw(sf::RenderWindow & win, sf::Font font, sf::Image* icons)
 {
 	win.clear(bg_color);
 	// create vector from internal styling
@@ -155,9 +157,9 @@ void Board::display(sf::RenderWindow & win, sf::Font font, sf::Image* icons)
 	// draw each field
 	// TODO to avoid creating fields and textures each time, maybe just
 	// create them once and draw?
-	for (size_t e = 0; e < row_count; e++)
+	for (size_t e = 0; e < row_num; e++)
 	{
-		for (size_t i = 0; i < col_count; i++)
+		for (size_t i = 0; i < col_num; i++)
 		{
 			// calculate the position of the field
 			float x, y;
@@ -227,28 +229,32 @@ void Board::display(sf::RenderWindow & win, sf::Font font, sf::Image* icons)
 			win.draw(sprite);
 		}
 	}
-	sf::Event event;
-	win.pollEvent(event);
-	if (event.type == sf::Event::MouseButtonPressed)
+	if (game_continues())
 	{
-		sf::Vector2i m_pos = sf::Mouse::getPosition(win);
-		int i_x = m_pos.x / (width + padding);
-		int i_y = m_pos.y / (height + padding);
-		if (in_bounds(i_x, i_y))
+		sf::Event event;
+		win.pollEvent(event);
+		if (event.type == sf::Event::MouseButtonPressed)
 		{
-			float x_rel = m_pos.x - i_x * (width + padding);
-			float y_rel = m_pos.y - i_y * (height + padding);
-			if (0 <= (x_rel - padding) && (x_rel - padding) <= width && 0 <= (y_rel - padding) && (y_rel - padding) <= height)
+			sf::Vector2i m_pos = sf::Mouse::getPosition(win);
+			int i_x = m_pos.x / (width + padding);
+			int i_y = m_pos.y / (height + padding);
+			if (in_bounds(i_x, i_y))
 			{
-				if (event.mouseButton.button == sf::Mouse::Left)
+				float x_rel = m_pos.x - i_x * (width + padding);
+				float y_rel = m_pos.y - i_y * (height + padding);
+				if (0 <= (x_rel - padding) && (x_rel - padding) <= width && 0 <= (y_rel - padding) && (y_rel - padding) <= height)
 				{
-					reveal(i_x, i_y);
-				}
-				if (event.mouseButton.button == sf::Mouse::Right)
-				{
-					toggle_flag(i_x, i_y);
-				}
+					if (event.mouseButton.button == sf::Mouse::Left)
+					{
+						// game ends on last reveal
+						reveal(i_x, i_y);
+					}
+					if (event.mouseButton.button == sf::Mouse::Right)
+					{
+						toggle_flag(i_x, i_y);
+					}
 
+				}
 			}
 		}
 	}
@@ -257,12 +263,82 @@ void Board::display(sf::RenderWindow & win, sf::Font font, sf::Image* icons)
 
 }
 
+void Board::display(int i)
+{
+	// TODO score starts with creation of the window and ends with bomb
+	// create a window, set properties and loop for a responsive gui
+	unsigned int win_width = col_num * (width + padding) + padding;
+	unsigned int win_height = row_num * (height + padding) + padding;
+	sf::RenderWindow window(sf::VideoMode(win_width, win_height), "Saper");
+	window.setFramerateLimit(60);
+	// Load resources
+	sf::Font font;
+	sf::Image* icons = new sf::Image[3];
+	if (!icons[0].loadFromFile("boom.png"))
+	{
+		std::cerr << "Failed to open boom.png \n";
+	}
+	if (!icons[1].loadFromFile("bomb.png"))
+	{
+		std::cerr << "Failed to open bomb.png \n";
+	}
+	if (!icons[2].loadFromFile("flag.png"))
+	{
+		std::cerr << "Failed to open flag.png \n";
+	}
+	if (!font.loadFromFile("font.ttf"))
+	{
+		std::cerr << "Failed to load font \n";
+	}
+
+	// start the game timer
+	this->start_timestamp = Time::now();
+	while (window.isOpen())
+	{
+		sf::Event event;
+		while (window.pollEvent(event))
+		{
+			if (event.type == sf::Event::Closed)
+			{
+				window.close();
+			}
+			
+		}
+		draw(window, font, icons);
+		// if game doesn't continue, new window with intro appears
+	}
+	window.close();
+}
+
 void Board::style_game(unsigned int width, unsigned int height, unsigned int padding, sf::Color bg_color)
 {
 	this->width = width;
 	this->height = height;
 	this->padding = padding;
 	this->bg_color = bg_color;
+}
+
+bool Board::game_continues()
+{
+	bool cont = false;
+	for (size_t e = 0; e < row_num; e++)
+	{
+		for (size_t i = 0; i < col_num; i++)
+		{
+			// as long as there is not visible fields without mine, game continues
+			if (!grid[e][i].get_visible() && !has_mine(i, e))
+			{
+				cont = true;
+			}
+			// if there is uncovered field with mine, don't continue even if
+			// condition ABOVE is true
+			if (grid[e][i].get_visible() && has_mine(i, e))
+			{
+				return false;
+			}
+		}
+	}
+	return cont;
 }
 
 void Board::reveal(int x, int y)
@@ -275,6 +351,7 @@ void Board::reveal(int x, int y)
 			uncover_mines();
 		}
 	}
+	this->end_timestamp = Time::now();
 }
 
 void Board::toggle_flag(int x, int y)
@@ -287,9 +364,9 @@ void Board::toggle_flag(int x, int y)
 
 void Board::uncover_mines()
 {
-	for (size_t e = 0; e < row_count; e++)
+	for (size_t e = 0; e < row_num; e++)
 	{
-		for (size_t i = 0; i < col_count; i++)
+		for (size_t i = 0; i < col_num; i++)
 		{
 			if (has_mine(i, e))
 			{

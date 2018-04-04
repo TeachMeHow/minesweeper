@@ -1,14 +1,15 @@
 #pragma once
 #include "Field.h"
 #include <SFML/Graphics.hpp>
+#include <chrono>
 class Board
 {
 	// all fields are on the grid
 	Field** grid;
 	// if no size is specified this is the default size
 	static const size_t DEFAULT_SIZE;
-	size_t row_count;
-	size_t col_count;
+	size_t row_num;
+	size_t col_num;
 	// true if a mine has been reveal'ed'()
 	bool end_game;
 	// false if there is no field with x,y index on the grid
@@ -18,6 +19,11 @@ class Board
 	unsigned int height = 40;
 	unsigned int padding = 10;
 	sf::Color bg_color = sf::Color(0x696969);
+	// for when the game ends and starts
+	std::chrono::time_point<std::chrono::steady_clock> start_timestamp;
+	std::chrono::time_point<std::chrono::steady_clock> end_timestamp;
+	// score is -1 if loss or number of seconds if it's a win
+	int score = -1;
 public:
 	Board() : Board(DEFAULT_SIZE, DEFAULT_SIZE) { };
 	//Square board MxM
@@ -32,6 +38,7 @@ public:
 	bool has_mine(int x, int y) const;
 	// counts the number of mines around a field
 	int count_mines(int x, int y) const;
+	// game ends on last reveal
 	// set a mine visible and uncover mines and end the game if mine is present
 	void reveal(int x, int y);
 	// toggle flag
@@ -41,10 +48,15 @@ public:
 	// Text representation of the board displayed in console
 	void display() const;
 	// Board display linked to a SFML  window
-	void display(sf::RenderWindow & win, sf::Font font, sf::Image *icons);
-	// Method to handle mouse clicks
+	void draw(sf::RenderWindow & win, sf::Font font, sf::Image *icons);
+	// Board display with its own window
+	void display(int i);
+	// Change the default graphical style of the game
 	void style_game(unsigned int width, unsigned int height, unsigned int padding, sf::Color bg_color);
 	// returns true if bomb has been revealed
 	bool end() { return end_game; };
+	// checks for condition for game end
+	bool game_continues();
+
 };
 

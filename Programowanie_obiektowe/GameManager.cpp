@@ -47,7 +47,7 @@ void GameManager::draw()
 	}
 		break;
 	case GAME:	
-		board.display(window, font, icons);
+		board.draw(window, font, icons);
 		if (board.end())
 		{
 			state = END;
