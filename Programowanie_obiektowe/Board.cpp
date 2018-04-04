@@ -1,5 +1,6 @@
 #include "Board.h"
 #include "Intro.h"
+#include "ScoreBoard.h"
 //#include "ScoreBoard.h"
 #include <iostream>
 #include <unordered_set>
@@ -298,7 +299,12 @@ void Board::display(int i)
 	// game start timestamp and marker
 	this->start_timestamp = Time::now();
 	state = IN_PROGRESS;
-	while (window.isOpen())
+	//while (window.isOpen())
+	//{
+
+	//	// if game doesn't continue, new window with intro appears
+	//}
+	while (state == IN_PROGRESS)
 	{
 		sf::Event event;
 		while (window.pollEvent(event))
@@ -307,13 +313,15 @@ void Board::display(int i)
 			{
 				window.close();
 			}
-			
+				
 		}
 		// game state has to be checked before every draw
 		check_state();
 		draw(window, font, icons);
-		// if game doesn't continue, new window with intro appears
 	}
+	draw(window, font, icons);
+	ScoreBoard scb(*this);
+	scb.display();
 	window.close();
 	delete[] icons;
 }
@@ -329,9 +337,9 @@ void Board::style_game(unsigned int width, unsigned int height, unsigned int pad
 void Board::check_state()
 {
 	bool cont = false;
-	for (size_t e = 0; e < row_num; e++)
+	for (int e = 0; e < row_num; e++)
 	{
-		for (size_t i = 0; i < col_num; i++)
+		for (int i = 0; i < col_num; i++)
 		{
 			// as long as there is not visible fields without mine, game continues
 			if (!grid[e][i].get_visible() && !has_mine(i, e))
@@ -346,6 +354,7 @@ void Board::check_state()
 			}
 		}
 	}
+	if (!cont) state = WIN;
 }
 
 int Board::score()
@@ -358,10 +367,14 @@ int Board::score()
 	{
 		// calculate duration in seconds and cast to int
 		//TODO
-		int score;
+		int score = 0;
+		duration<float>count(end_timestamp - start_timestamp);
+		score = count.count();
+		return score;
 	}
 	}
 }
+
 
 void Board::reveal(int x, int y)
 {
@@ -372,7 +385,24 @@ void Board::reveal(int x, int y)
 			end_game = true;
 			uncover_mines();
 		}
+		//if (!has_mine(x + 1, y) && in_bounds(x + 1, y) && !grid[x + 1][y].get_visible())
+		//{
+		//	reveal(x + 1, y);
+		//}
+		//if (!has_mine(x - 1, y) && in_bounds(x - 1, y) && !grid[x - 1][y].get_visible())
+		//{
+		//	reveal(x - 1, y);
+		//}
+		//if (!has_mine(x, y + 1) && in_bounds(x, y + 1) && !grid[x][y + 1].get_visible())
+		//{
+		//	reveal(x, y + 1);
+		//}
+		//if (!has_mine(x, y - 1) && in_bounds(x, y - 1) && !grid[x][y - 1].get_visible())
+		//{
+		//	reveal(x, y - 1);
+		//}
 	}
+	
 	this->end_timestamp = Time::now();
 }
 
@@ -386,9 +416,9 @@ void Board::toggle_flag(int x, int y)
 
 void Board::uncover_mines()
 {
-	for (size_t e = 0; e < row_num; e++)
+	for (int e = 0; e < row_num; e++)
 	{
-		for (size_t i = 0; i < col_num; i++)
+		for (int i = 0; i < col_num; i++)
 		{
 			if (has_mine(i, e))
 			{

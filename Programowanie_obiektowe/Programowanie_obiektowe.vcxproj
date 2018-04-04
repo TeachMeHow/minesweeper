@@ -134,12 +134,14 @@
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="Intro.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="ScoreBoard.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Board.h" />
     <ClInclude Include="Field.h" />
     <ClInclude Include="GameManager.h" />
     <ClInclude Include="Intro.h" />
+    <ClInclude Include="ScoreBoard.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
