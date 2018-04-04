@@ -2,6 +2,7 @@
 #include "Field.h"
 #include "Board.h"
 #include <SFML/Graphics.hpp>
+#include <chrono>
 
 class GameManager
 {
@@ -10,6 +11,7 @@ class GameManager
 	sf::Font font;
 	sf::Image* icons;
 	enum GameState {START, GAME, END} state;
+	int score;
 public:
 	GameManager(sf::RenderWindow & win, Board & board);
 	~GameManager();

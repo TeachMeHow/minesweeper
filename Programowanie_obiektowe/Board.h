@@ -34,8 +34,9 @@ public:
 	int count_mines(int x, int y) const;
 	// set a mine visible and uncover mines and end the game if mine is present
 	void reveal(int x, int y);
+	// toggle flag
+	void toggle_flag(int x, int y);
 	// set all fields visible
-	// TODO only mines visible?
 	void uncover_mines();
 	// Text representation of the board displayed in console
 	void display() const;
@@ -43,9 +44,7 @@ public:
 	void display(sf::RenderWindow & win, sf::Font font, sf::Image *icons);
 	// Method to handle mouse clicks
 	void style_game(unsigned int width, unsigned int height, unsigned int padding, sf::Color bg_color);
+	// returns true if bomb has been revealed
 	bool end() { return end_game; };
-	// returns score in seconds or fail (-1)
-	int score();
-
 };
 

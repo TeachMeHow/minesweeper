@@ -246,19 +246,16 @@ void Board::display(sf::RenderWindow & win, sf::Font font, sf::Image* icons)
 				}
 				if (event.mouseButton.button == sf::Mouse::Right)
 				{
-					grid[i_y][i_x].toggle_flag();
+					toggle_flag(i_x, i_y);
 				}
 
 			}
 		}
-
-
 	}
 
 	win.display();
 
 }
-
 
 void Board::style_game(unsigned int width, unsigned int height, unsigned int padding, sf::Color bg_color)
 {
@@ -268,17 +265,23 @@ void Board::style_game(unsigned int width, unsigned int height, unsigned int pad
 	this->bg_color = bg_color;
 }
 
-int Board::score()
-{
-	return -1;
-}
-
 void Board::reveal(int x, int y)
 {
-	grid[y][x].set_visible();
-	if (has_mine(x, y)) {
-		end_game = true;
-		uncover_mines();
+	if (in_bounds(x, y))
+	{
+		grid[y][x].set_visible();
+		if (has_mine(x, y)) {
+			end_game = true;
+			uncover_mines();
+		}
+	}
+}
+
+void Board::toggle_flag(int x, int y)
+{
+	if (in_bounds(x, y))
+	{
+		grid[y][x].toggle_flag();
 	}
 }
 
