@@ -46,7 +46,8 @@ int main()
 	//	gm.draw();
 	//}
 
-	game.display(1);
+	GameManager gm(game);
+	gm.start_game();
 
 	return EXIT_SUCCESS;
 }

@@ -1,4 +1,6 @@
 #include "Board.h"
+#include "Intro.h"
+//#include "ScoreBoard.h"
 #include <iostream>
 #include <unordered_set>
 #include <vector>
@@ -290,7 +292,9 @@ void Board::display(int i)
 	{
 		std::cerr << "Failed to load font \n";
 	}
-
+	// show intro window
+	Intro intro = Intro();
+	intro.display();
 	// game start timestamp and marker
 	this->start_timestamp = Time::now();
 	state = IN_PROGRESS;
@@ -311,6 +315,7 @@ void Board::display(int i)
 		// if game doesn't continue, new window with intro appears
 	}
 	window.close();
+	delete[] icons;
 }
 
 void Board::style_game(unsigned int width, unsigned int height, unsigned int padding, sf::Color bg_color)

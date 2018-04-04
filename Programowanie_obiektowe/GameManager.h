@@ -7,16 +7,19 @@
 class GameManager
 {
 	Board & board;
-	sf::RenderWindow & window;
-	sf::Font font;
-	sf::Image* icons;
-	enum GameState {START, GAME, END} state;
-	int score;
+	//sf::RenderWindow & window;
+	//sf::Font font;
+	//sf::Image* icons;
+	//enum GameState {START, GAME, END} state;
+	//int score;
 public:
-	GameManager(sf::RenderWindow & win, Board & board);
+	//GameManager(sf::RenderWindow & win, Board & board);
+	// connect to board
+	GameManager(Board & brd);
 	~GameManager();
-	void draw();
-	void debug_change_state();
-	void handle_event(sf::Event event);
+	//void draw();
+	//void debug_change_state();
+	//void handle_event(sf::Event event);
+	void start_game();
 };
 
