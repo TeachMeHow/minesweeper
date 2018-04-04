@@ -20,6 +20,7 @@ class Board
 	int padding = 10;
 	sf::Color bg_color = sf::Color(0x696969);
 	// for when the game ends and starts
+	// game ends when the last field is revealed ( be it last empty or bomb)
 	std::chrono::time_point<std::chrono::steady_clock> start_timestamp;
 	std::chrono::time_point<std::chrono::steady_clock> end_timestamp;
 	enum GameState {IN_PROGRESS, WIN, LOSS} state;
@@ -52,9 +53,7 @@ public:
 	void display(int i);
 	// Change the default graphical style of the game
 	void style_game(unsigned int width, unsigned int height, unsigned int padding, sf::Color bg_color);
-	// returns true if bomb has been revealed
-	bool end() { return end_game; };
-	// checks for condition for game end
+	// checks state of the game and sets it to correct one
 	void check_state();
 	// returns game score based on duration, -1 if loss
 	int score();

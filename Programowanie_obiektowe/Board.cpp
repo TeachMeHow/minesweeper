@@ -386,6 +386,7 @@ void Board::reveal(int x, int y)
 		end_game = true;
 		uncover_mines();
 	}
+	// if the field is blank, reveal all fields around it
 	if (count_mines(x, y) == 0)
 	{
 		reveal(x + 1, y);
@@ -398,6 +399,7 @@ void Board::reveal(int x, int y)
 		reveal(x - 1, y);
 		
 	}
+	// when the field is revealed, (potential!) end of the game time is recorded
 	this->end_timestamp = Time::now();
 }
 
