@@ -229,7 +229,7 @@ void Board::draw(sf::RenderWindow & win, sf::Font font, sf::Image* icons)
 			win.draw(sprite);
 		}
 	}
-	if (game_continues())
+	if (state == IN_PROGRESS)
 	{
 		sf::Event event;
 		win.pollEvent(event);
@@ -291,8 +291,9 @@ void Board::display(int i)
 		std::cerr << "Failed to load font \n";
 	}
 
-	// start the game timer
+	// game start timestamp and marker
 	this->start_timestamp = Time::now();
+	state = IN_PROGRESS;
 	while (window.isOpen())
 	{
 		sf::Event event;
@@ -304,6 +305,8 @@ void Board::display(int i)
 			}
 			
 		}
+		// game state has to be checked before every draw
+		check_state();
 		draw(window, font, icons);
 		// if game doesn't continue, new window with intro appears
 	}
@@ -318,7 +321,7 @@ void Board::style_game(unsigned int width, unsigned int height, unsigned int pad
 	this->bg_color = bg_color;
 }
 
-bool Board::game_continues()
+void Board::check_state()
 {
 	bool cont = false;
 	for (size_t e = 0; e < row_num; e++)
@@ -334,11 +337,25 @@ bool Board::game_continues()
 			// condition ABOVE is true
 			if (grid[e][i].get_visible() && has_mine(i, e))
 			{
-				return false;
+				state = LOSS;
 			}
 		}
 	}
-	return cont;
+}
+
+int Board::score()
+{
+	switch (state)
+	{
+	case IN_PROGRESS: return -1;
+	case LOSS: return -1;
+	case WIN:
+	{
+		// calculate duration in seconds and cast to int
+		//TODO
+		int score;
+	}
+	}
 }
 
 void Board::reveal(int x, int y)

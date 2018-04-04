@@ -22,8 +22,7 @@ class Board
 	// for when the game ends and starts
 	std::chrono::time_point<std::chrono::steady_clock> start_timestamp;
 	std::chrono::time_point<std::chrono::steady_clock> end_timestamp;
-	// score is -1 if loss or number of seconds if it's a win
-	int score = -1;
+	enum GameState {IN_PROGRESS, WIN, LOSS} state;
 public:
 	Board() : Board(DEFAULT_SIZE, DEFAULT_SIZE) { };
 	//Square board MxM
@@ -56,7 +55,9 @@ public:
 	// returns true if bomb has been revealed
 	bool end() { return end_game; };
 	// checks for condition for game end
-	bool game_continues();
+	void check_state();
+	// returns game score based on duration, -1 if loss
+	int score();
 
 };
 
