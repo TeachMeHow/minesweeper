@@ -1,7 +1,6 @@
 #include "Board.h"
 #include "Intro.h"
 #include "ScoreBoard.h"
-//#include "ScoreBoard.h"
 #include <iostream>
 #include <unordered_set>
 #include <vector>
@@ -378,31 +377,27 @@ int Board::score()
 
 void Board::reveal(int x, int y)
 {
-	if (in_bounds(x, y))
-	{
-		grid[y][x].set_visible();
-		if (has_mine(x, y)) {
-			end_game = true;
-			uncover_mines();
-		}
-		//if (!has_mine(x + 1, y) && in_bounds(x + 1, y) && !grid[x + 1][y].get_visible())
-		//{
-		//	reveal(x + 1, y);
-		//}
-		//if (!has_mine(x - 1, y) && in_bounds(x - 1, y) && !grid[x - 1][y].get_visible())
-		//{
-		//	reveal(x - 1, y);
-		//}
-		//if (!has_mine(x, y + 1) && in_bounds(x, y + 1) && !grid[x][y + 1].get_visible())
-		//{
-		//	reveal(x, y + 1);
-		//}
-		//if (!has_mine(x, y - 1) && in_bounds(x, y - 1) && !grid[x][y - 1].get_visible())
-		//{
-		//	reveal(x, y - 1);
-		//}
+
+	if (!in_bounds(x, y)) return;
+	if (grid[y][x].get_visible()) return;
+
+	grid[y][x].set_visible();
+	if (has_mine(x, y)) {
+		end_game = true;
+		uncover_mines();
 	}
-	
+	if (count_mines(x, y) == 0)
+	{
+		reveal(x + 1, y);
+		reveal(x + 1, y + 1);
+		reveal(x + 1, y - 1);
+		reveal(x, y + 1);
+		reveal(x, y - 1);
+		reveal(x - 1, y + 1);
+		reveal(x - 1, y - 1);
+		reveal(x - 1, y);
+		
+	}
 	this->end_timestamp = Time::now();
 }
 

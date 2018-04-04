@@ -15,9 +15,9 @@ class Board
 	// false if there is no field with x,y index on the grid
 	bool in_bounds(int x, int y) const;
 	// styling with default values
-	unsigned int width = 40;
-	unsigned int height = 40;
-	unsigned int padding = 10;
+	int width = 40;
+	int height = 40;
+	int padding = 10;
 	sf::Color bg_color = sf::Color(0x696969);
 	// for when the game ends and starts
 	std::chrono::time_point<std::chrono::steady_clock> start_timestamp;
