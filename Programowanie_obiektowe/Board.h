@@ -46,11 +46,11 @@ public:
 	// set all fields visible
 	void uncover_mines();
 	// Text representation of the board displayed in console
-	void display() const;
+	void debug_display() const;
 	// Board display linked to a SFML  window
 	void draw(sf::RenderWindow & win, sf::Font font, sf::Image *icons);
 	// Board display with its own window
-	void display(int i);
+	void display();
 	// Change the default graphical style of the game
 	void style_game(unsigned int width, unsigned int height, unsigned int padding, sf::Color bg_color);
 	// checks state of the game and sets it to correct one

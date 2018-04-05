@@ -13,7 +13,7 @@ int main()
 	unsigned int col_num = 10;
 	unsigned int row_num = 10;
 	Board game = Board(row_num, col_num);
-	game.deploy_mines(1, true);
+	game.deploy_mines(10, true);
 	GameManager gm(game);
 	gm.start_game();
 

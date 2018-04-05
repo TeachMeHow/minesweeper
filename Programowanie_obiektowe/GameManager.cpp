@@ -35,7 +35,7 @@ GameManager::~GameManager()
 
 void GameManager::start_game()
 {
-	board.display(1);
+	board.display();
 }
 
 //void GameManager::draw()

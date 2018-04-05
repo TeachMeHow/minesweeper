@@ -120,7 +120,7 @@ int Board::count_mines(int x, int y) const
 	return count;
 }
 
-void Board::display() const
+void Board::debug_display() const
 {
 	for (size_t i = 0; i < row_num; i++)
 	{
@@ -265,7 +265,7 @@ void Board::draw(sf::RenderWindow & win, sf::Font font, sf::Image* icons)
 
 }
 
-void Board::display(int i)
+void Board::display()
 {
 	// TODO score starts with creation of the window and ends with bomb
 	// create a window, set properties and loop for a responsive gui
@@ -373,7 +373,6 @@ int Board::score()
 	}
 	}
 }
-
 
 void Board::reveal(int x, int y)
 {
