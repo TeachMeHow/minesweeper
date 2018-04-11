@@ -10,12 +10,11 @@ class Board
 	static const int DEFAULT_SIZE;
 	int row_num;
 	int col_num;
-	// true if a mine has been reveal'ed'()
-	bool end_game;
 	// for when the game ends and starts
 	// game ends when the last field is revealed ( be it last empty or bomb)
 	std::chrono::time_point<std::chrono::steady_clock> start_timestamp;
 	std::chrono::time_point<std::chrono::steady_clock> end_timestamp;
+	// state of the game
 	enum GameState {IN_PROGRESS = 0, WIN = 1, LOSS = 2} state;
 public:
 	Board() : Board(DEFAULT_SIZE, DEFAULT_SIZE) { };
@@ -44,9 +43,6 @@ public:
 	void uncover_mines();
 	// Text representation of the board displayed in console
 	void debug_display() const;
-
-	// checks state of the game and sets it to correct one
-	void check_state();
 	// returns game score based on duration, -1 if loss
 	int score();
 	// return state in int form

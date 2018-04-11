@@ -28,7 +28,6 @@ Board::Board(int M, int N)
 {
 	row_num = M;
 	col_num = N;
-	end_game = false;
 	
 	grid = new Field*[M];
 	for (size_t i = 0; i < M; i++)
@@ -151,33 +150,6 @@ void Board::debug_display() const
 
 }
 
-
-
-
-
-void Board::check_state()
-{
-	bool cont = false;
-	for (int e = 0; e < row_num; e++)
-	{
-		for (int i = 0; i < col_num; i++)
-		{
-			// as long as there is not visible fields without mine, game continues
-			if (!grid[e][i].get_visible() && !has_mine(i, e))
-			{
-				cont = true;
-			}
-			// if there is uncovered field with mine, don't continue even if
-			// condition ABOVE is true
-			if (grid[e][i].get_visible() && has_mine(i, e))
-			{
-				state = LOSS;
-			}
-		}
-	}
-	if (!cont) state = WIN;
-}
-
 int Board::score()
 {
 	switch (state)
@@ -233,8 +205,10 @@ void Board::reveal(int x, int y)
 
 	grid[y][x].set_visible();
 	if (has_mine(x, y)) {
-		end_game = true;
 		uncover_mines();
+		state = LOSS;
+		// when the field is revealed, (potential!) end of the game time is recorded
+		this->end_timestamp = Time::now();
 	}
 	// if the field is blank, reveal all fields around it
 	if (count_mines(x, y) == 0)
@@ -249,8 +223,6 @@ void Board::reveal(int x, int y)
 		reveal(x - 1, y);
 		
 	}
-	// when the field is revealed, (potential!) end of the game time is recorded
-	this->end_timestamp = Time::now();
 }
 
 void Board::toggle_flag(int x, int y)

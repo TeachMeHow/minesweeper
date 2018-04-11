@@ -173,8 +173,8 @@ void GameManager::display()
 			}
 
 		}
-		// game state has to be checked before every draw
-		board.check_state();
+		//// game state has to be checked before every draw
+		//board.check_state();
 		draw(window, font, icons);
 	}
 	draw(window, font, icons);
