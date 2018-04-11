@@ -46,9 +46,6 @@ public:
 	// returns game score based on duration, -1 if loss
 	int score();
 	// return state in int form
-	// 0 - in progress
-	// 1 - finished, game won
-	// 2 - finished, game lost
 	int get_state();
 	// gets state of field at grid
 	int get_field_state(int x, int y);

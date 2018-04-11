@@ -7,6 +7,7 @@
 using namespace std::chrono;
 
 
+
 GameManager::GameManager(Board & brd) : board(brd)
 {
 }

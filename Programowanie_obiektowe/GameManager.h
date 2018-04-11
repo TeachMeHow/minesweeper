@@ -14,8 +14,6 @@ class GameManager
 	sf::Color bg_color = sf::Color(0x696969);
 
 public:
-	//GameManager(sf::RenderWindow & win, Board & board);
-	// connect to board
 	GameManager(Board & brd);
 	~GameManager();
 
