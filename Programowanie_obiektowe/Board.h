@@ -1,3 +1,6 @@
+// Autor: Szymon Cichy 235093
+// Data: 11.04.2018
+
 #pragma once
 #include "Field.h"
 #include <SFML/Graphics.hpp>

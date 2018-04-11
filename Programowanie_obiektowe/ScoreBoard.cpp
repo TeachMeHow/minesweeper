@@ -1,3 +1,6 @@
+// Autor: Szymon Cichy 235093
+// Data: 11.04.2018
+
 #include "ScoreBoard.h"
 #include <iostream>
 #include <string>
