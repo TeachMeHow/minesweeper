@@ -7,19 +7,26 @@
 class GameManager
 {
 	Board & board;
-	//sf::RenderWindow & window;
-	//sf::Font font;
-	//sf::Image* icons;
-	//enum GameState {START, GAME, END} state;
-	//int score;
+	// styling with default values
+	int width = 40;
+	int height = 40;
+	int padding = 10;
+	sf::Color bg_color = sf::Color(0x696969);
+
 public:
 	//GameManager(sf::RenderWindow & win, Board & board);
 	// connect to board
 	GameManager(Board & brd);
 	~GameManager();
-	//void draw();
-	//void debug_change_state();
-	//void handle_event(sf::Event event);
+
+	// Board display linked to a SFML  window
+	void draw(sf::RenderWindow & win, sf::Font font, sf::Image *icons);
+
+	// Board display with its own window
+	void display();
+
+	// Change the default graphical style of the game
+	void style_game(unsigned int width, unsigned int height, unsigned int padding, sf::Color bg_color);
 	void start_game();
 };
 

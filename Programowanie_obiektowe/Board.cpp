@@ -15,7 +15,7 @@ using std::string;
 using namespace std::chrono;
 typedef high_resolution_clock Time;
 
-const size_t Board::DEFAULT_SIZE = 10;
+const int Board::DEFAULT_SIZE = 10;
 
 //TODO Wrong number of has_mines - bounds?
 bool Board::in_bounds(int x, int y) const
@@ -24,7 +24,7 @@ bool Board::in_bounds(int x, int y) const
 		0 <= y && y < row_num;
 }
 
-Board::Board(size_t M, size_t N)
+Board::Board(int M, int N)
 {
 	row_num = M;
 	col_num = N;
@@ -58,7 +58,7 @@ void Board::deploy_mines(int n, bool random)
 		unordered_set<int> generated_numbers;
 		vector<int> row_indexes;
 		vector<int> col_indexes;
-		srand(time(NULL));
+		srand((unsigned int)time(NULL));
 		while (generated_numbers.size() < n)
 		{
 			generated_numbers.insert(rand() % range);
@@ -122,17 +122,17 @@ int Board::count_mines(int x, int y) const
 
 void Board::debug_display() const
 {
-	for (size_t i = 0; i < row_num; i++)
+	for (int i = 0; i < row_num; i++)
 	{
 		grid[5][i].set_visible();
 	}
-	for (size_t i = 0; i < col_num; i++)
+	for (int i = 0; i < col_num; i++)
 	{
 		grid[i][4].set_flag(true);
 	}
-	for (size_t e = 0; e < row_num; e++)
+	for (int e = 0; e < row_num; e++)
 	{
-		for (size_t i = 0; i < col_num; i++)
+		for (int i = 0; i < col_num; i++)
 		{
 			Field element = grid[e][i];
 			std::string symbol;
@@ -151,187 +151,9 @@ void Board::debug_display() const
 
 }
 
-void Board::draw(sf::RenderWindow & win, sf::Font font, sf::Image* icons)
-{
-	win.clear(bg_color);
-	// create vector from internal styling
-	sf::Vector2f dimensions = sf::Vector2f(width, height);
-	// draw each field
-	// TODO to avoid creating fields and textures each time, maybe just
-	// create them once and draw?
-	for (size_t e = 0; e < row_num; e++)
-	{
-		for (size_t i = 0; i < col_num; i++)
-		{
-			// calculate the position of the field
-			float x, y;
-			x = i * padding + padding + i * dimensions.x;
-			y = e * padding + padding + e * dimensions.y;
-			sf::Vector2f pos(x, y);
-			// create a rectangle representing a field
-			sf::RectangleShape rectangle = sf::RectangleShape(dimensions);
-			rectangle.setPosition(pos);
 
-			sf::Text text;
-			sf::Sprite sprite;
-			// WARNING texture MUST be the same size as icons used - in my case it's 100x100 png files
-			sf::Texture texture;
-			texture.create(100, 100);
 
-			// set character size to be the same as either width or height, whichever is smaller
-			// style the 
-			text.setCharacterSize(width < height ? width : height);
-			//set text to empty and style it
-			text.setString("");
-			text.setFont(font);
-			text.setFillColor(sf::Color::Black);
-			text.setPosition(pos);
 
-			
-
-			// styling the field
-			// get field corresponding to the rectangle being drawn, get properties and assign according colors
-			Field element = grid[e][i];
-			// field not visible  and doesn't have a flag - base color
-			if (!element.get_visible() && !element.get_flag()) rectangle.setFillColor(sf::Color::Blue);
-			// field visible and has a flag - base color && flag symbol
-			else if (!element.get_visible() && element.get_flag())
-			{
-				rectangle.setFillColor(sf::Color::Blue);
-				texture.update(icons[2]);
-
-				sprite.setTexture(texture);
-				sprite.setPosition(pos);
-				sprite.setScale(width / 100.0, height / 100.0);
-			}
-			// field is visible and no mines around - empty color
-			else if (element.get_visible() && !has_mine(i, e))
-			{
-				rectangle.setFillColor(sf::Color::Magenta);
-				text.setString(std::to_string(count_mines(i,e)));
-				
-				if (count_mines(i, e) == 0)
-				{
-					text.setString("");
-				}
-			}
-			// mine - empty/boom color?? and bomb symbol
-			else if (element.get_visible() && has_mine(i, e)) 
-			{
-				rectangle.setFillColor(sf::Color::White);
-
-				texture.update(icons[1]);
-
-				sprite.setTexture(texture);
-				sprite.setPosition(pos);
-				sprite.setScale(width / 100.0, height / 100.0);		
-			}
-			win.draw(rectangle);
-			win.draw(text);
-			win.draw(sprite);
-		}
-	}
-	if (state == IN_PROGRESS)
-	{
-		sf::Event event;
-		win.pollEvent(event);
-		if (event.type == sf::Event::MouseButtonPressed)
-		{
-			sf::Vector2i m_pos = sf::Mouse::getPosition(win);
-			int i_x = m_pos.x / (width + padding);
-			int i_y = m_pos.y / (height + padding);
-			if (in_bounds(i_x, i_y))
-			{
-				float x_rel = m_pos.x - i_x * (width + padding);
-				float y_rel = m_pos.y - i_y * (height + padding);
-				if (0 <= (x_rel - padding) && (x_rel - padding) <= width && 0 <= (y_rel - padding) && (y_rel - padding) <= height)
-				{
-					if (event.mouseButton.button == sf::Mouse::Left)
-					{
-						// game ends on last reveal
-						reveal(i_x, i_y);
-					}
-					if (event.mouseButton.button == sf::Mouse::Right)
-					{
-						toggle_flag(i_x, i_y);
-					}
-
-				}
-			}
-		}
-	}
-
-	win.display();
-
-}
-
-void Board::display()
-{
-	// TODO score starts with creation of the window and ends with bomb
-	// create a window, set properties and loop for a responsive gui
-	unsigned int win_width = col_num * (width + padding) + padding;
-	unsigned int win_height = row_num * (height + padding) + padding;
-	sf::RenderWindow window(sf::VideoMode(win_width, win_height), "Saper");
-	window.setFramerateLimit(60);
-	// Load resources
-	sf::Font font;
-	sf::Image* icons = new sf::Image[3];
-	if (!icons[0].loadFromFile("boom.png"))
-	{
-		std::cerr << "Failed to open boom.png \n";
-	}
-	if (!icons[1].loadFromFile("bomb.png"))
-	{
-		std::cerr << "Failed to open bomb.png \n";
-	}
-	if (!icons[2].loadFromFile("flag.png"))
-	{
-		std::cerr << "Failed to open flag.png \n";
-	}
-	if (!font.loadFromFile("font.ttf"))
-	{
-		std::cerr << "Failed to load font \n";
-	}
-	// show intro window
-	Intro intro = Intro();
-	intro.display();
-	// game start timestamp and marker
-	this->start_timestamp = Time::now();
-	state = IN_PROGRESS;
-	//while (window.isOpen())
-	//{
-
-	//	// if game doesn't continue, new window with intro appears
-	//}
-	while (state == IN_PROGRESS)
-	{
-		sf::Event event;
-		while (window.pollEvent(event))
-		{
-			if (event.type == sf::Event::Closed)
-			{
-				window.close();
-			}
-				
-		}
-		// game state has to be checked before every draw
-		check_state();
-		draw(window, font, icons);
-	}
-	draw(window, font, icons);
-	ScoreBoard scb(*this);
-	scb.display();
-	window.close();
-	delete[] icons;
-}
-
-void Board::style_game(unsigned int width, unsigned int height, unsigned int padding, sf::Color bg_color)
-{
-	this->width = width;
-	this->height = height;
-	this->padding = padding;
-	this->bg_color = bg_color;
-}
 
 void Board::check_state()
 {
@@ -368,10 +190,39 @@ int Board::score()
 		//TODO
 		int score = 0;
 		duration<float>count(end_timestamp - start_timestamp);
-		score = count.count();
+		score = (int)count.count();
 		return score;
 	}
 	}
+	// if for whatever reason none of the above return anything
+	return -2;
+}
+
+int Board::get_state()
+{
+	return state;
+}
+
+int Board::get_field_state(int x, int y)
+{
+	Field element = grid[y][x];
+	// field not visible  and doesn't have a flag - base color
+	if (!element.get_visible() && !element.get_flag()) return 0;
+	// field visible and has a flag - base color && flag symbol
+	else if (!element.get_visible() && element.get_flag()) return 1;
+	// field is visible and no mines around - empty color
+	else if (element.get_visible() && !has_mine(x, y)) return 2;
+	// mine - empty/boom color?? and bomb symbol
+	else if (element.get_visible() && has_mine(x, y)) return 3;
+	// mystery state
+	return -1;
+}
+
+void Board::start_game()
+{
+	// game start timestamp and marker
+	this->start_timestamp = Time::now();
+	state = IN_PROGRESS;
 }
 
 void Board::reveal(int x, int y)

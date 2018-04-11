@@ -1,29 +1,11 @@
 #include "GameManager.h"
 #include <iostream>
 #include <string>
+#include "ScoreBoard.h"
+#include "Intro.h"
 
 using namespace std::chrono;
-//GameManager::GameManager(sf::RenderWindow & win, Board & brd) : board(brd), window(win)
-//{
-//	icons = new sf::Image[3];
-//	if (!icons[0].loadFromFile("boom.png"))
-//	{
-//		std::cerr << "Failed to open boom.png \n";
-//	}
-//	if (!icons[1].loadFromFile("bomb.png"))
-//	{
-//		std::cerr << "Failed to open bomb.png \n";
-//	}
-//	if (!icons[2].loadFromFile("flag.png"))
-//	{
-//		std::cerr << "Failed to open flag.png \n";
-//	}
-//	if (!font.loadFromFile("font.ttf"))
-//	{
-//		std::cerr << "Failed to load font \n";
-//	}
-//	state = START;
-//}
+
 
 GameManager::GameManager(Board & brd) : board(brd)
 {
@@ -33,74 +15,186 @@ GameManager::~GameManager()
 {
 }
 
-void GameManager::start_game()
+void GameManager::draw(sf::RenderWindow & win, sf::Font font, sf::Image* icons)
 {
-	board.display();
+	win.clear(bg_color);
+	// create vector from internal styling
+	sf::Vector2f dimensions = sf::Vector2f(width, height);
+	// draw each field
+	// TODO to avoid creating fields and textures each time, maybe just
+	// create them once and draw?
+	for (int e = 0; e < board.get_row_num(); e++)
+	{
+		for (int i = 0; i < board.get_col_num(); i++)
+		{
+			// calculate the position of the field
+			float x, y;
+			x = i * padding + padding + i * dimensions.x;
+			y = e * padding + padding + e * dimensions.y;
+			sf::Vector2f pos(x, y);
+			// create a rectangle representing a field
+			sf::RectangleShape rectangle = sf::RectangleShape(dimensions);
+			rectangle.setPosition(pos);
+
+			sf::Text text;
+			sf::Sprite sprite;
+			// WARNING texture MUST be the same size as icons used - in my case it's 100x100 png files
+			sf::Texture texture;
+			texture.create(100, 100);
+
+			// set character size to be the same as either width or height, whichever is smaller
+			// style the 
+			text.setCharacterSize(width < height ? width : height);
+			//set text to empty and style it
+			text.setString("");
+			text.setFont(font);
+			text.setFillColor(sf::Color::Black);
+			text.setPosition(pos);
+
+
+
+			// styling the field
+			// get field corresponding to the rectangle being drawn, get properties and assign according colors
+			
+			switch (board.get_field_state(i, e))
+			{
+			case 0:
+				rectangle.setFillColor(sf::Color::Blue);
+				break;
+			case 1:
+				rectangle.setFillColor(sf::Color::Blue);
+				texture.update(icons[2]);
+
+				sprite.setTexture(texture);
+				sprite.setPosition(pos);
+				sprite.setScale(width / 100.0, height / 100.0);
+				break;
+			case 2:
+				rectangle.setFillColor(sf::Color::Magenta);
+				text.setString(std::to_string(board.count_mines(i, e)));
+
+				if (board.count_mines(i, e) == 0)
+				{
+					text.setString("");
+				}
+				break;
+			case 3:
+				rectangle.setFillColor(sf::Color::White);
+
+				texture.update(icons[1]);
+
+				sprite.setTexture(texture);
+				sprite.setPosition(pos);
+				sprite.setScale(width / 100.0, height / 100.0);
+				break;
+			}
+			win.draw(rectangle);
+			win.draw(text);
+			win.draw(sprite);
+		}
+	}
+	if (board.get_state() == 0)
+	{
+		sf::Event event;
+		win.pollEvent(event);
+		if (event.type == sf::Event::MouseButtonPressed)
+		{
+			sf::Vector2i m_pos = sf::Mouse::getPosition(win);
+			int i_x = m_pos.x / (width + padding);
+			int i_y = m_pos.y / (height + padding);
+			if (board.in_bounds(i_x, i_y))
+			{
+				float x_rel = (float)m_pos.x - i_x * (width + padding);
+				float y_rel = (float)m_pos.y - i_y * (height + padding);
+				if (0 <= (x_rel - padding) && (x_rel - padding) <= width && 0 <= (y_rel - padding) && (y_rel - padding) <= height)
+				{
+					if (event.mouseButton.button == sf::Mouse::Left)
+					{
+						// game ends on last reveal
+						board.reveal(i_x, i_y);
+					}
+					if (event.mouseButton.button == sf::Mouse::Right)
+					{
+						board.toggle_flag(i_x, i_y);
+					}
+
+				}
+			}
+		}
+	}
+
+	win.display();
+
+}
+void GameManager::display()
+{
+	// TODO score starts with creation of the window and ends with bomb
+	// create a window, set properties and loop for a responsive gui
+	int win_width = board.get_col_num() * (width + padding) + padding;
+	int win_height = board.get_row_num() * (height + padding) + padding;
+	sf::RenderWindow window(sf::VideoMode(win_width, win_height), "Saper");
+	window.setFramerateLimit(60);
+	// Load resources
+	sf::Font font;
+	sf::Image* icons = new sf::Image[3];
+	if (!icons[0].loadFromFile("boom.png"))
+	{
+		std::cerr << "Failed to open boom.png \n";
+	}
+	if (!icons[1].loadFromFile("bomb.png"))
+	{
+		std::cerr << "Failed to open bomb.png \n";
+	}
+	if (!icons[2].loadFromFile("flag.png"))
+	{
+		std::cerr << "Failed to open flag.png \n";
+	}
+	if (!font.loadFromFile("font.ttf"))
+	{
+		std::cerr << "Failed to load font \n";
+	}
+	// show intro window
+	Intro intro = Intro();
+	intro.display();
+	board.start_game();
+	//while (window.isOpen())
+	//{
+
+	//	// if game doesn't continue, new window with intro appears
+	//}
+	while (board.get_state() == 0)
+	{
+		sf::Event event;
+		while (window.pollEvent(event))
+		{
+			if (event.type == sf::Event::Closed)
+			{
+				window.close();
+			}
+
+		}
+		// game state has to be checked before every draw
+		board.check_state();
+		draw(window, font, icons);
+	}
+	draw(window, font, icons);
+	ScoreBoard scb(board);
+	scb.display();
+	window.close();
+	delete[] icons;
 }
 
-//void GameManager::draw()
-//{
-//	switch (state)
-//	{
-//	case START:
-//	{
-//		window.clear(sf::Color(0x000000));
-//		sf::Text text;
-//		text.setCharacterSize(25);
-//		text.setFont(font);
-//		// TODO game doesn't have a score yet
-//		text.setString("PRESS ANY KEY TO START THE GAME");
-//		window.draw(text);
-//		window.display();
-//	}
-//		break;
-//	case GAME:	
-//		board.draw(window, font, icons);
-//		if (board.end())
-//		{
-//			state = END;
-//		}
-//		break;
-//	case END:
-//		window.clear(sf::Color(0x000000));
-//		sf::Text text;
-//		text.setCharacterSize(25);
-//		text.setFont(font);
-//		// TODO game doesn't have a score yet
-//
-//		text.setString("YOUR SCORE: " + std::to_string(score));
-//		window.draw(text);
-//		window.display();
-//	
-//	}
-//}
-//
-//
-//void GameManager::debug_change_state()
-//{
-//	switch (state)
-//	{
-//	case START: 
-//		// start the game
-//		state = GAME;
-//		
-//		break;
-//	case GAME: 
-//		// end the game
-//		state = END;
-//		break;
-//	case END: 
-//		// start over
-//		state = START;
-//		break;
-//	}
-//}
-//
-//void GameManager::handle_event(sf::Event event)
-//{
-//	// change game state with any button press
-//	if (event.type == sf::Event::KeyPressed) 
-//	{
-//		debug_change_state();
-//	}
-//}
+void GameManager::style_game(unsigned int width, unsigned int height, unsigned int padding, sf::Color bg_color)
+{
+	this->width = width;
+	this->height = height;
+	this->padding = padding;
+	this->bg_color = bg_color;
+}
+
+void GameManager::start_game()
+{
+
+}
+
+

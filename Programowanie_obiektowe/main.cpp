@@ -15,7 +15,7 @@ int main()
 	Board game = Board(row_num, col_num);
 	game.deploy_mines(10, true);
 	GameManager gm(game);
-	gm.start_game();
+	gm.display();
 
 	return EXIT_SUCCESS;
 }

@@ -7,30 +7,27 @@ class Board
 	// all fields are on the grid
 	Field** grid;
 	// if no size is specified this is the default size
-	static const size_t DEFAULT_SIZE;
-	size_t row_num;
-	size_t col_num;
+	static const int DEFAULT_SIZE;
+	int row_num;
+	int col_num;
 	// true if a mine has been reveal'ed'()
 	bool end_game;
-	// false if there is no field with x,y index on the grid
-	bool in_bounds(int x, int y) const;
-	// styling with default values
-	int width = 40;
-	int height = 40;
-	int padding = 10;
-	sf::Color bg_color = sf::Color(0x696969);
 	// for when the game ends and starts
 	// game ends when the last field is revealed ( be it last empty or bomb)
 	std::chrono::time_point<std::chrono::steady_clock> start_timestamp;
 	std::chrono::time_point<std::chrono::steady_clock> end_timestamp;
-	enum GameState {IN_PROGRESS, WIN, LOSS} state;
+	enum GameState {IN_PROGRESS = 0, WIN = 1, LOSS = 2} state;
 public:
 	Board() : Board(DEFAULT_SIZE, DEFAULT_SIZE) { };
 	//Square board MxM
-	Board(size_t M) : Board(M, M) { };
+	Board(int M) : Board(M, M) { };
 	//Rectangular board MxN
-	Board(size_t M, size_t N);
+	Board(int M, int N);
 	~Board();
+	// false if there is no field with x,y index on the grid
+	bool in_bounds(int x, int y) const;
+	int get_row_num() { return row_num; };
+	int get_col_num() { return col_num; };
 	// deploys mines on the board, if random is true randomly,
 	// if not, in a set pattern
 	void deploy_mines(int n, bool random);
@@ -47,16 +44,18 @@ public:
 	void uncover_mines();
 	// Text representation of the board displayed in console
 	void debug_display() const;
-	// Board display linked to a SFML  window
-	void draw(sf::RenderWindow & win, sf::Font font, sf::Image *icons);
-	// Board display with its own window
-	void display();
-	// Change the default graphical style of the game
-	void style_game(unsigned int width, unsigned int height, unsigned int padding, sf::Color bg_color);
+
 	// checks state of the game and sets it to correct one
 	void check_state();
 	// returns game score based on duration, -1 if loss
 	int score();
-
+	// return state in int form
+	// 0 - in progress
+	// 1 - finished, game won
+	// 2 - finished, game lost
+	int get_state();
+	// gets state of field at grid
+	int get_field_state(int x, int y);
+	void start_game();
 };
 
