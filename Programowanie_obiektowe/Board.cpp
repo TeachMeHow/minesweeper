@@ -176,6 +176,19 @@ int Board::score()
 
 int Board::get_state()
 {
+	bool win = true;
+	for (int e = 0; e < row_num; e++)
+	{
+		for (int i = 0; i < col_num; i++)
+		{
+			if (!grid[e][i].get_visible() && !has_mine(i, e)) win = false;
+		}
+	}
+	if (win)
+	{
+		state = WIN;
+		end_timestamp = Time::now();
+	}
 	return state;
 }
 

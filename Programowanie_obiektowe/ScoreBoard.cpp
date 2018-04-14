@@ -23,10 +23,11 @@ ScoreBoard::~ScoreBoard()
 
 void ScoreBoard::draw()
 {
-	window.clear();
+	window.clear(light_blue);
 	sf::Text text;
-	text.setCharacterSize(20);
+	text.setCharacterSize(50);
 	text.setFont(font);
+	text.setFillColor(black);
 	std::string str;
 	if (!(board.score() == -1))
 	{
