@@ -110,8 +110,8 @@ void Intro::draw(sf::RenderWindow & window, sf::Font font)
 	start_btn.setFillColor(light_orange);
 	start_btn.setOutlineColor(dark_orange);
 	start_btn.setOutlineThickness(3);
-	start_btn.setPosition(sf::Vector2f(20, 250));
-	btn_text.setPosition(sf::Vector2f(20 + 20, 250 + 50 - 20));
+	start_btn.setPosition(start_btn_pos);
+	btn_text.setPosition(start_btn_pos + sf::Vector2f(20, 50 - 20));
 	window.draw(start_btn);
 	window.draw(btn_text);
 
@@ -141,7 +141,7 @@ std::vector<int> Intro::display()
 	sf::ContextSettings settings;
 	settings.antialiasingLevel = 8;
 	sf::RenderWindow window(sf::VideoMode(400, 400), "Introduction", sf::Style::Close | sf::Style::Titlebar, settings);
-	while (window.isOpen())
+	while (window.isOpen() && start_btn_clicked == 0)
 	{
 		sf::Event event;
 		while (window.pollEvent(event))
@@ -154,7 +154,7 @@ std::vector<int> Intro::display()
 			{
 				if (event.mouseButton.button == sf::Mouse::Left)
 				{
-					handle_mouse(sf::Vector2f(sf::Mouse::getPosition(window)));
+					handle_mouse(window);
 				}
 			}
 		}
@@ -189,55 +189,64 @@ std::vector<int> Intro::display()
 	default: std::cerr << "Unexpected difficulty choice";
 		break;
 	}
+	params[3] = start_btn_clicked;
 
 	return params;
 
 }
 
-void Intro::handle_mouse(sf::Vector2f m_pos)
+void Intro::handle_mouse(sf::RenderWindow& window)
 {
 	// if for every button
-	if (0 <= row_0_btn_0_pos.x - m_pos.x
-		&& row_0_btn_0_pos.x - m_pos.x <= btn_size.x
-		&& 0 <= row_0_btn_0_pos.y - m_pos.y
-		&& row_0_btn_0_pos.y - m_pos.y <= btn_size.y)
+	auto m_pos = sf::Mouse::getPosition(window);
+	if (0 <= m_pos.x - row_0_btn_0_pos.x
+		&& m_pos.x - row_0_btn_0_pos.x <= btn_size.x
+		&& 0 <= m_pos.y - row_0_btn_0_pos.y
+		&& m_pos.y - row_0_btn_0_pos.y <= btn_size.y)
 	{
 		row_0_active_button = 0;
 	}
-	else if (0 <= row_0_btn_1_pos.x - m_pos.x
-		&& row_0_btn_1_pos.x - m_pos.x <= btn_size.x
-		&& 0 <= row_0_btn_1_pos.y - m_pos.y
-		&& row_0_btn_1_pos.y - m_pos.y <= btn_size.y)
+	else if (0 <= m_pos.x - row_0_btn_1_pos.x
+		&& m_pos.x - row_0_btn_1_pos.x <= btn_size.x
+		&& 0 <= m_pos.y - row_0_btn_1_pos.y
+		&& m_pos.y - row_0_btn_1_pos.y <= btn_size.y)
 	{
 		row_0_active_button = 1;
 	}
-	else if (0 <= row_0_btn_2_pos.x - m_pos.x
-		&& row_0_btn_2_pos.x - m_pos.x <= btn_size.x
-		&& 0 <= row_0_btn_2_pos.y - m_pos.y
-		&& row_0_btn_2_pos.y - m_pos.y <= btn_size.y)
+	else if (0 <= m_pos.x - row_0_btn_2_pos.x
+		&& m_pos.x - row_0_btn_2_pos.x <= btn_size.x
+		&& 0 <= m_pos.y - row_0_btn_2_pos.y
+		&& m_pos.y - row_0_btn_2_pos.y <= btn_size.y)
 	{
 		row_0_active_button = 2;
 	}
-	else if (0 <= row_1_btn_0_pos.x - m_pos.x
-		&& row_1_btn_0_pos.x - m_pos.x <= btn_size.x
-		&& 0 <= row_1_btn_0_pos.y - m_pos.y
-		&& row_1_btn_0_pos.y - m_pos.y <= btn_size.y)
+	else if (0 <= m_pos.x - row_1_btn_0_pos.x
+		&& m_pos.x - row_1_btn_0_pos.x <= btn_size.x
+		&& 0 <= m_pos.y - row_1_btn_0_pos.y
+		&& m_pos.y - row_1_btn_0_pos.y <= btn_size.y)
 	{
 		row_1_active_button = 0;
 	}
-	else if (0 <= row_1_btn_1_pos.x - m_pos.x
-		&& row_1_btn_1_pos.x - m_pos.x <= btn_size.x
-		&& 0 <= row_1_btn_1_pos.y - m_pos.y
-		&& row_1_btn_1_pos.y - m_pos.y <= btn_size.y)
+	else if (0 <= m_pos.x - row_1_btn_1_pos.x
+		&& m_pos.x - row_1_btn_1_pos.x <= btn_size.x
+		&& 0 <= m_pos.y - row_1_btn_1_pos.y
+		&& m_pos.y - row_1_btn_1_pos.y <= btn_size.y)
 	{
 		row_1_active_button = 1;
 	}
-	else if (0 <= row_1_btn_2_pos.x - m_pos.x
-		&& row_1_btn_2_pos.x - m_pos.x <= btn_size.x
-		&& 0 <= row_1_btn_2_pos.y - m_pos.y
-		&& row_1_btn_2_pos.y - m_pos.y <= btn_size.y)
+	else if (0 <= 0 <= m_pos.x - row_1_btn_2_pos.x
+		&& m_pos.x - row_1_btn_2_pos.x <= btn_size.x
+		&& 0 <= m_pos.y - row_1_btn_2_pos.y
+		&& m_pos.y - row_1_btn_2_pos.y <= btn_size.y)
 	{
 		row_1_active_button = 2;
 	}
-	
+	else if ((m_pos.x - (start_btn_pos.x + start_btn_radius)) * \
+		(m_pos.x - (start_btn_pos.x + start_btn_radius)) + \
+		(m_pos.y - (start_btn_pos.y + start_btn_radius)) * \
+		(m_pos.y - (start_btn_pos.y + start_btn_radius)) \
+		<= start_btn_radius * start_btn_radius)
+	{
+		start_btn_clicked = 1;
+	}
 }

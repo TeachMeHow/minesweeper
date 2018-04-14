@@ -26,6 +26,8 @@ class Intro
 	const sf::Vector2f grid_spacing = sf::Vector2f(10, 10);
 	const sf::Vector2f btn_size = sf::Vector2f(60, 30);
 	const int title_char_size = 20;
+	const int start_btn_radius = 50;
+	const sf::Vector2f start_btn_pos = sf::Vector2f(20, 250);
 	// button and title positions
 	sf::Vector2f title_1_pos = grid_pos;
 	sf::Vector2f row_0_btn_0_pos = title_1_pos + sf::Vector2f(0, title_char_size + grid_spacing.y);
@@ -41,7 +43,7 @@ class Intro
 	// minesweeper values are changed accordingly to active button
 	int row_0_active_button = 0;
 	int row_1_active_button = 0;
-
+	int start_btn_clicked = 0;
 public:
 	Intro();
 	~Intro();
@@ -53,6 +55,6 @@ public:
 	// param[2] - difficulty - number of bombs
 	// param[3]	- start was pressed (window not closed by X) 0 - not started, 1 - started
 	std::vector<int> display();
-	void handle_mouse(sf::Vector2f m_pos);
+	void handle_mouse(sf::RenderWindow& window);
 };
 
