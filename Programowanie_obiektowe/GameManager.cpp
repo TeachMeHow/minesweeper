@@ -35,7 +35,7 @@ void GameManager::draw(sf::RenderWindow & win, sf::Font* font, sf::Image* icons)
 			float x, y;
 			x = i * padding + padding + i * dimensions.x;
 			y = e * padding + padding + e * dimensions.y;
-			sf::Vector2f pos(x, y);
+			sf::Vector2f pos = sf::Vector2f(x, y);
 			// create a rectangle representing a field
 			sf::RectangleShape rectangle = sf::RectangleShape(dimensions);
 			rectangle.setPosition(pos);
@@ -53,8 +53,6 @@ void GameManager::draw(sf::RenderWindow & win, sf::Font* font, sf::Image* icons)
 			text.setString("");
 			text.setFont(*font);
 			text.setFillColor(sf::Color::Black);
-			text.setPosition(pos);
-
 
 
 			// styling the field
@@ -92,6 +90,7 @@ void GameManager::draw(sf::RenderWindow & win, sf::Font* font, sf::Image* icons)
 				sprite.setScale(width / 100.0, height / 100.0);
 				break;
 			}
+			text.setPosition(pos + sf::Vector2f((width - text.getGlobalBounds().width) / 2 - 3, -5));
 			win.draw(rectangle);
 			win.draw(text);
 			win.draw(sprite);
