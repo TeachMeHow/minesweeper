@@ -196,6 +196,48 @@ std::vector<int> Intro::display()
 
 void Intro::handle_mouse(sf::Vector2f m_pos)
 {
-	// mouse position logic
-
+	// if for every button
+	if (0 <= row_0_btn_0_pos.x - m_pos.x
+		&& row_0_btn_0_pos.x - m_pos.x <= btn_size.x
+		&& 0 <= row_0_btn_0_pos.y - m_pos.y
+		&& row_0_btn_0_pos.y - m_pos.y <= btn_size.y)
+	{
+		row_0_active_button = 0;
+	}
+	else if (0 <= row_0_btn_1_pos.x - m_pos.x
+		&& row_0_btn_1_pos.x - m_pos.x <= btn_size.x
+		&& 0 <= row_0_btn_1_pos.y - m_pos.y
+		&& row_0_btn_1_pos.y - m_pos.y <= btn_size.y)
+	{
+		row_0_active_button = 1;
+	}
+	else if (0 <= row_0_btn_2_pos.x - m_pos.x
+		&& row_0_btn_2_pos.x - m_pos.x <= btn_size.x
+		&& 0 <= row_0_btn_2_pos.y - m_pos.y
+		&& row_0_btn_2_pos.y - m_pos.y <= btn_size.y)
+	{
+		row_0_active_button = 2;
+	}
+	else if (0 <= row_1_btn_0_pos.x - m_pos.x
+		&& row_1_btn_0_pos.x - m_pos.x <= btn_size.x
+		&& 0 <= row_1_btn_0_pos.y - m_pos.y
+		&& row_1_btn_0_pos.y - m_pos.y <= btn_size.y)
+	{
+		row_1_active_button = 0;
+	}
+	else if (0 <= row_1_btn_1_pos.x - m_pos.x
+		&& row_1_btn_1_pos.x - m_pos.x <= btn_size.x
+		&& 0 <= row_1_btn_1_pos.y - m_pos.y
+		&& row_1_btn_1_pos.y - m_pos.y <= btn_size.y)
+	{
+		row_1_active_button = 1;
+	}
+	else if (0 <= row_1_btn_2_pos.x - m_pos.x
+		&& row_1_btn_2_pos.x - m_pos.x <= btn_size.x
+		&& 0 <= row_1_btn_2_pos.y - m_pos.y
+		&& row_1_btn_2_pos.y - m_pos.y <= btn_size.y)
+	{
+		row_1_active_button = 2;
+	}
+	
 }
