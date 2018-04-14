@@ -98,32 +98,7 @@ void GameManager::draw(sf::RenderWindow & win, sf::Font* font, sf::Image* icons)
 	}
 	if (board.get_state() == 0)
 	{
-		sf::Event event;
-		win.pollEvent(event);
-		if (event.type == sf::Event::MouseButtonPressed)
-		{
-			sf::Vector2i m_pos = sf::Mouse::getPosition(win);
-			int i_x = m_pos.x / (width + padding);
-			int i_y = m_pos.y / (height + padding);
-			if (board.in_bounds(i_x, i_y))
-			{
-				float x_rel = (float)m_pos.x - i_x * (width + padding);
-				float y_rel = (float)m_pos.y - i_y * (height + padding);
-				if (0 <= (x_rel - padding) && (x_rel - padding) <= width && 0 <= (y_rel - padding) && (y_rel - padding) <= height)
-				{
-					if (event.mouseButton.button == sf::Mouse::Left)
-					{
-						// game ends on last reveal
-						board.reveal(i_x, i_y);
-					}
-					if (event.mouseButton.button == sf::Mouse::Right)
-					{
-						board.toggle_flag(i_x, i_y);
-					}
-
-				}
-			}
-		}
+		
 	}
 
 	win.display();
@@ -171,7 +146,10 @@ void GameManager::display()
 			{
 				window.close();
 			}
-
+			if (event.type == sf::Event::MouseButtonPressed)
+			{
+				handle_mouse(window, event.mouseButton.button);
+			}
 		}
 		//// game state has to be checked before every draw
 		//board.check_state();
@@ -182,6 +160,32 @@ void GameManager::display()
 	scb.display();
 	window.close();
 	delete[] icons;
+}
+
+void GameManager::handle_mouse(sf::RenderWindow & window, sf::Mouse::Button button)
+{
+	sf::Vector2i m_pos = sf::Mouse::getPosition(window);
+	int i_x = m_pos.x / (width + padding);
+	int i_y = m_pos.y / (height + padding);
+	if (board.in_bounds(i_x, i_y))
+	{
+		float x_rel = (float)m_pos.x - i_x * (width + padding);
+		float y_rel = (float)m_pos.y - i_y * (height + padding);
+		if (0 <= (x_rel - padding) && (x_rel - padding) <= width && 0 <= (y_rel - padding) && (y_rel - padding) <= height)
+		{
+			if (button == sf::Mouse::Left)
+			{
+				// game ends on last reveal
+				board.reveal(i_x, i_y);
+			}
+			if (button == sf::Mouse::Right)
+			{
+				board.toggle_flag(i_x, i_y);
+			}
+
+		}
+	}
+	
 }
 
 

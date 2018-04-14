@@ -29,5 +29,8 @@ public:
 
 	// Board display with its own window
 	void display();
+
+	// handle mouse events
+	void handle_mouse(sf::RenderWindow& window, sf::Mouse::Button button);
 };
 
