@@ -8,15 +8,30 @@
 class Intro
 {
 	// color palette
-	const sf::Color light_blue;
-	const sf::Color dark_blue;
-	const sf::Color white;
-	const sf::Color black;
-	const sf::Color light_orange;
-	const sf::Color dark_orange;
+	const sf::Color light_blue = sf::Color(76, 155, 211, 255);
+	const sf::Color dark_blue = sf::Color(6, 42, 68, 255);
+	const sf::Color white = sf::Color(255, 255, 255, 255);
+	const sf::Color black = sf::Color(0, 0, 0, 255);
+	const sf::Color light_orange = sf::Color(255, 176, 81, 255);
+	const sf::Color dark_orange = sf::Color(106, 61, 2, 255);
 
+	// window size
 	const int window_width = 400;
 	const int window_height = 400;
+	
+	// position and size of elements inside a window
+	//
+	// button grid elements
+	const sf::Vector2f grid_pos = sf::Vector2f(15, 100);
+	const sf::Vector2f grid_spacing = sf::Vector2f(10, 10);
+	const sf::Vector2f btn_size = sf::Vector2f(60, 30);
+
+	// IMPORTANT - active buttons
+	// buttons are numbered from 0 to 2 and one in each row is active
+	// buttons are colored according to those values
+	// minesweeper values are changed accordingly to active button
+	int row_1_active_button = 0;
+	int row_2_active_button = 0;
 
 public:
 	Intro();
