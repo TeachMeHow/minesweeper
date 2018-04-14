@@ -14,6 +14,7 @@ class GameManager
 	int width = 40;
 	int height = 40;
 	int padding = 10;
+	// palette
 	sf::Color light_orange = sf::Color(255, 197, 94, 255);
 
 public:

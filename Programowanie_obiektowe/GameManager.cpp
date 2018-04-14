@@ -21,7 +21,7 @@ GameManager::~GameManager()
 
 void GameManager::draw(sf::RenderWindow & win, sf::Font font, sf::Image* icons)
 {
-	win.clear(bg_color);
+	win.clear(light_orange);
 	// create vector from internal styling
 	sf::Vector2f dimensions = sf::Vector2f(width, height);
 	// draw each field
@@ -190,7 +190,7 @@ void GameManager::style_game(unsigned int width, unsigned int height, unsigned i
 	this->width = width;
 	this->height = height;
 	this->padding = padding;
-	this->bg_color = bg_color;
+	this->light_orange = bg_color;
 }
 
 void GameManager::start_game()
