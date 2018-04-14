@@ -16,6 +16,9 @@ class GameManager
 	int padding = 10;
 	// palette
 	sf::Color light_orange = sf::Color(255, 197, 94, 255);
+	sf::Color light_blue = sf::Color(90, 105, 200, 255);
+	sf::Color dim_blue = sf::Color(54, 56, 73, 255);
+	sf::Color light_yellow = sf::Color(255, 227, 119, 255);
 
 public:
 	GameManager(Board & brd);
@@ -26,9 +29,6 @@ public:
 
 	// Board display with its own window
 	void display();
-
-	// Change the default graphical style of the game
-	void style_game(unsigned int width, unsigned int height, unsigned int padding, sf::Color bg_color);
 	void start_game();
 };
 

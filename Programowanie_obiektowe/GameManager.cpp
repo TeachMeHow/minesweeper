@@ -21,7 +21,7 @@ GameManager::~GameManager()
 
 void GameManager::draw(sf::RenderWindow & win, sf::Font font, sf::Image* icons)
 {
-	win.clear(light_orange);
+	win.clear(dim_blue);
 	// create vector from internal styling
 	sf::Vector2f dimensions = sf::Vector2f(width, height);
 	// draw each field
@@ -63,10 +63,10 @@ void GameManager::draw(sf::RenderWindow & win, sf::Font font, sf::Image* icons)
 			switch (board.get_field_state(i, e))
 			{
 			case 0:
-				rectangle.setFillColor(sf::Color::Blue);
+				rectangle.setFillColor(light_blue);
 				break;
 			case 1:
-				rectangle.setFillColor(sf::Color::Blue);
+				rectangle.setFillColor(light_blue);
 				texture.update(icons[2]);
 
 				sprite.setTexture(texture);
@@ -74,7 +74,7 @@ void GameManager::draw(sf::RenderWindow & win, sf::Font font, sf::Image* icons)
 				sprite.setScale(width / 100.0, height / 100.0);
 				break;
 			case 2:
-				rectangle.setFillColor(sf::Color::Magenta);
+				rectangle.setFillColor(light_orange);
 				text.setString(std::to_string(board.count_mines(i, e)));
 
 				if (board.count_mines(i, e) == 0)
@@ -83,7 +83,7 @@ void GameManager::draw(sf::RenderWindow & win, sf::Font font, sf::Image* icons)
 				}
 				break;
 			case 3:
-				rectangle.setFillColor(sf::Color::White);
+				rectangle.setFillColor(light_yellow);
 
 				texture.update(icons[1]);
 
@@ -158,10 +158,7 @@ void GameManager::display()
 		std::cerr << "Failed to load font \n";
 	}
 	board.start_game();
-	//while (window.isOpen())
-	//{
-
-	//	// if game doesn't continue, new window with intro appears
+	//	// if game doesn't continue, new window with icore appears
 	//}
 	while (board.get_state() == 0)
 	{
