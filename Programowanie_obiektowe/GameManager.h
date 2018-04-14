@@ -14,7 +14,7 @@ class GameManager
 	int width = 40;
 	int height = 40;
 	int padding = 10;
-	sf::Color bg_color = sf::Color(0x696969);
+	sf::Color light_orange = sf::Color(255, 197, 94, 255);
 
 public:
 	GameManager(Board & brd);
