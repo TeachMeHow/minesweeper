@@ -157,9 +157,6 @@ void GameManager::display()
 	{
 		std::cerr << "Failed to load font \n";
 	}
-	// show intro window
-	Intro intro = Intro();
-	intro.display();
 	board.start_game();
 	//while (window.isOpen())
 	//{

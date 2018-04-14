@@ -6,19 +6,24 @@
 
 #include "Board.h"
 #include "GameManager.h"
+#include "Intro.h"
 #include <stdlib.h>
 #include <iostream>
+#include <vector>
 
 
 int main()
 {
-	// number of rows and columns
-	unsigned int col_num = 10;
-	unsigned int row_num = 10;
-	Board game = Board(row_num, col_num);
-	game.deploy_mines(10, true);
-	GameManager gm(game);
-	gm.display();
+	// Intro window before starting the game
+	Intro intro = Intro();
+	auto params = intro.display();
+	if (params[3] == 1)
+	{
+		Board game = Board(params[0], params[1]);
+		game.deploy_mines(params[2], true);
+		GameManager gm(game);
+		gm.display();
+	}
 
 	return EXIT_SUCCESS;
 }
