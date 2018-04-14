@@ -19,7 +19,7 @@ GameManager::~GameManager()
 {
 }
 
-void GameManager::draw(sf::RenderWindow & win, sf::Font font, sf::Image* icons)
+void GameManager::draw(sf::RenderWindow & win, sf::Font* font, sf::Image* icons)
 {
 	win.clear(dim_blue);
 	// create vector from internal styling
@@ -51,7 +51,7 @@ void GameManager::draw(sf::RenderWindow & win, sf::Font font, sf::Image* icons)
 			text.setCharacterSize(width < height ? width : height);
 			//set text to empty and style it
 			text.setString("");
-			text.setFont(font);
+			text.setFont(*font);
 			text.setFillColor(sf::Color::Black);
 			text.setPosition(pos);
 
@@ -176,9 +176,9 @@ void GameManager::display()
 		}
 		//// game state has to be checked before every draw
 		//board.check_state();
-		draw(window, font, icons);
+		draw(window, &font, icons);
 	}
-	draw(window, font, icons);
+	draw(window, &font, icons);
 	ScoreBoard scb(board);
 	scb.display();
 	window.close();

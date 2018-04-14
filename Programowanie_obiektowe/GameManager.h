@@ -25,7 +25,7 @@ public:
 	~GameManager();
 
 	// Board display linked to a SFML  window
-	void draw(sf::RenderWindow & win, sf::Font font, sf::Image *icons);
+	void draw(sf::RenderWindow & win, sf::Font* font, sf::Image *icons);
 
 	// Board display with its own window
 	void display();
