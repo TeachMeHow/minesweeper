@@ -51,6 +51,11 @@ public:
 	// return state in int form
 	int get_state();
 	// gets state of field at grid
+	// 0 - not visible and no flag
+	// 1 - not visible + flag
+	// 2 - visible and no mine
+	// 3 - visible and mine
+	// -1 - something has gone wrong
 	int get_field_state(int x, int y);
 	void start_game();
 };

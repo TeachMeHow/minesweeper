@@ -140,6 +140,9 @@ void GameManager::display()
 	window.setFramerateLimit(60);
 	// Load resources
 	sf::Font font;
+	// icons[0] - explosion icon
+	// icons[1] - bomb icon
+	// icons[2] - flag icon
 	sf::Image* icons = new sf::Image[3];
 	if (!icons[0].loadFromFile("boom.png"))
 	{
@@ -180,19 +183,6 @@ void GameManager::display()
 	scb.display();
 	window.close();
 	delete[] icons;
-}
-
-void GameManager::style_game(unsigned int width, unsigned int height, unsigned int padding, sf::Color bg_color)
-{
-	this->width = width;
-	this->height = height;
-	this->padding = padding;
-	this->light_orange = bg_color;
-}
-
-void GameManager::start_game()
-{
-
 }
 
 

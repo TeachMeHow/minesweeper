@@ -29,6 +29,5 @@ public:
 
 	// Board display with its own window
 	void display();
-	void start_game();
 };
 
